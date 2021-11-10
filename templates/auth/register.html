@@ -11,31 +11,42 @@
         {% csrf_token %}
         <div>
             <label for="first_name">First Name: </label>
-            <input id="first_name" name="first_name" type="text">
+            <input id="first_name" name="first_name" type="text" value="{{ data.first_name }}">
         </div>
 
         <div>
             <label for="last_name">Last Name: </label>
-            <input id="last_name" name="last_name" type="text">
+            <input id="last_name" name="last_name" type="text" value="{{ data.last_name }}">
         </div>
         <div>
             <label for="username">Username: </label>
-            <input id="username" name="username" type="text">
+            <input id="username" name="username" type="text" value="{{ data.username }}" required>
         </div>
         <div>
             <label for="email">Email: </label>
-            <input id="email" name="email" type="email">
+            <input id="email" name="email" type="email" value="{{ data.email }}" required>
         </div>
         <div>
             <label for="password1">Password: </label>
-            <input id="password1" name="password1" type="password">
+            <input id="password1" name="password1" type="password" required>
         </div>
         <div>
             <label for="password2">Confirm Password: </label>
-            <input id="password2" name="password2" type="password">
+            <input id="password2" name="password2" type="password" required>
         </div>
         <button type="submit">Submit</button>
     </form>
+
+    {% if messages %}
+	<ul class="messages">
+		{% for message in messages %}
+		<li{% if message.tags %} class="{{ message.tags }}" {% endif %}>
+			{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+			{{ message }}
+			</li>
+			{% endfor %}
+	</ul>
+	{% endif %}
 </body>
 
 </html>

@@ -24,6 +24,8 @@ urlpatterns = [
     path('login/', user_views.loginUser, name='login'),
     path('register/', user_views.registerUser, name='register'),
     path('logout/', user_views.logoutUser, name='logout'),
-    path('main/', user_views.main, name='main'),
+    path('', user_views.main, name='main'),
     path('activate-user/<str:uidb64>/<str:token>', user_views.activate_user, name='activate')
+
+    # Ticket views
 ]

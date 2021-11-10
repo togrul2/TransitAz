@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.encoding import force_bytes, force_str, force_text, DjangoUnicodeDecodeError
+from django.utils.encoding import force_bytes, force_text
 from django.core.mail import EmailMessage
 from validate_email import validate_email
 from django.conf import settings
@@ -66,7 +66,7 @@ def loginUser(request):
 
             return redirect(request.GET.get('next', 'main'))
         else:
-            messages.error(request, "İstifadəçi adı və ya Şifrə yanlışdır")
+            messages.error(request, "İstifadəçi adı və ya şifrə yanlışdır!")
 
     return render(request, 'auth/login.html')
 
@@ -76,7 +76,8 @@ def registerUser(request):
         return redirect('main')
 
     if request.method == 'POST':
-        context = {'has_error': False, 'data': request.POST}
+        has_error = False
+        context = {'data': request.POST}
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
         email = request.POST.get('email')
@@ -85,35 +86,33 @@ def registerUser(request):
         password2 = request.POST.get('password2')
 
         if len(password1) < 6:
-            messages.error(request, 'Password should be at least 6 characters')
-            context['has_error'] = True
+            messages.error(request, 'Şifrə ən azı 6 simvoldan ibarət olmalıdır')
+            has_error = True
 
         if password1 != password2:
-            messages.error(request, 'Password mismatch')
-            context['has_error'] = True
+            messages.error(request, 'Şifrələr eyni deyillər')
+            has_error = True
 
         if not validate_email(email):
-            messages.error(request, 'Enter a valid email address that really exists')
-            context['has_error'] = True
+            messages.error(request, 'Həqiqi olan bir mail ünvanı daxil edin, hansınaki daxil ola bilərsiniz')
+            has_error = True
 
         if User.objects.filter(username=username).exists():
-            messages.error(request, 'Username is taken, choose another one')
-            context['has_error'] = True
-
-            return render(request, 'auth/register.html', context, status=409)
+            messages.error(request, 'İstifadəçi adı artıq islənir, başqasını seçin')
+            return render(request, 'auth/register.html', context={'data': context}, status=409)
 
         if User.objects.filter(email=email).exists():
-            messages.error(request, 'Email is taken, choose another one')
-            context['has_error'] = True
+            messages.error(request, 'Email adresi artıq islənir, başqasını seçin')
+            return render(request, 'auth/register.html', context={'data': context}, status=409)
 
-        if context['has_error']:
-            return render(request, 'auth/register.html', context)
+        if has_error:
+            return render(request, 'auth/register.html', context={'data': request.POST})
 
         user = User.objects.create_user(first_name=first_name, last_name=last_name, username=username, email=email)
         user.set_password(password1)
         user.save()
 
-        if not context['has_error']:
+        if not has_error:
             send_activation_email(request, user)
             messages.success(request, 'We sent you an email to verify your account')
             return redirect('login')
@@ -127,14 +126,14 @@ def logoutUser(request):
 
 
 def main(request):
-    return render(request, 'main.html')
+    return render(request, 'main.html', context={'path': 'main'})
 
 
 def activate_user(request, uidb64, token):
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
-    except Exception:
+    except:
         user = None
 
     if user and generate_token.check_token(user, token):

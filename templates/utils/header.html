@@ -25,12 +25,12 @@
 					<ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 						<li><a class="dropdown-item" href="#">Hesabım</a></li>
 						<li><a class="dropdown-item" href="#">Biletlərim</a></li>
-						<li><a class="dropdown-item" href="{% url 'logout' %}">Hesabdan cıx</a></li>
+						<li><a class="dropdown-item" href="{% url 'logout' %}?next={{path}}">Hesabdan cıx</a></li>
 					</ul>
 				</li>
                 {% else %}
-                <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Daxil Ol</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Qeydiyyatdan Kec</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'login' %}?next={{path}}">Daxil Ol</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'register' %}?next={{path}}">Qeydiyyatdan Kec</a></li>
 			</ul>
 
             {% endif %}

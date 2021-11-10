@@ -18,15 +18,13 @@
 </head>
 
 <body>
-	<div class="bg-image">
-
-	</div>
+	<div class="bg-image"></div>
 	<div class="wrapper">
 		<form action="" method="post">
 			{% csrf_token %}
 			<div class="row">
 				<h1>Transit Az</h1>
-				<h5w>Hesaba daxil</h5w>
+				<h5>Hesaba daxil</h5>
 			</div>
 			<div class="mt-5 mb-3 row text-sm-end">
 				<label for="inputUsername" class="col-sm-4 col-form-label">Istifadəçi
@@ -53,10 +51,10 @@
 			</div>
 			<div class="btn-wrapper">
 				<button class="btn btn-primary me-3" type="submit">Daxil ol</button>
-				<a href="{% url 'register' %}" class="btn btn-secondary">Hesab aç</a>
+				<a href="{% url 'register' %}" class="btn btn-outline-primary">Hesab aç</a>
 			</div>
 			<div class="mt-4 d-flex justify-content-center">
-				<a class="link-primary" href="#">Şifrə bərpa et</a>
+				<a class="btn btn-outline-danger btn-sm" href="#">Şifrə bərpa et</a>
 			</div>
 
 		</form>
@@ -64,11 +62,8 @@
 	{% if messages %}
 	<ul class="messages">
 		{% for message in messages %}
-		<li{% if message.tags %} class="{{ message.tags }}" {% endif %}>
-			{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
-			{{ message }}
-			</li>
-			{% endfor %}
+		<li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+        {% endfor %}
 	</ul>
 	{% endif %}
 	<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
