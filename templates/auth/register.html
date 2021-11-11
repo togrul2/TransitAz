@@ -1,12 +1,104 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
+<!-- <head>
     <meta charset="UTF-8">
     <title>Title</title>
+</head> -->
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <link rel="shortcut icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+    <title>Register</title>
+
+    <style>
+        .bg-image {
+            background-image: url({% static 'media/images/bgi.png' %});
+        }
+    </style>
 </head>
 
 <body>
+    <div class="bg-image"></div>
+    <div class="wrapper">
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="row">
+                <h1>Transit Az</h1>
+                <h5>Qeydiyyatdan kec</h5>
+            </div>
+            <div class="mt-5 mb-3 row text-sm-end">
+                <div class="col-md">
+                    <div class="form-floating">
+                        <input name='username' type="text" class="form-control" id="floatingInputGrid0"
+                            placeholder="istifadeci adi">
+                        <label for="floatingInputGrid0">Istifadeci adi</label>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3 row text-sm-end">
+                <div class="col-md">
+                    <div class="form-floating">
+                        <input name='first_name' type="text" class="form-control" id="floatingInputGrid1"
+                            placeholder="Ad">
+                        <label for="floatingInputGrid1">Ad</label>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="form-floating">
+                        <input name="last_name" type="text" class="form-control" id="floatingInputGrid"
+                            placeholder="soyad">
+                        <label for="floatingInputGrid">Soyad</label>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3 row text-sm-end">
+                <div class="col-md">
+                    <div class="form-floating">
+                        <input class="form-control" id="email" name="email" type="email" value="{{ data.email }}"
+                            placeholder="email@example.co" required>
+                        <label for="email">Email</label>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3 row text-sm-end">
+                <div class="col-md">
+                    <div class="form-floating">
+                        <input class="form-control" id="password1" name="password1" type="password" placeholder="2"
+                            required>
+                        <label for="password1">Password</label>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3 row text-sm-end">
+                <div class="col-md">
+                    <div class="form-floating">
+                        <input class="form-control" id="password2" name="password2" type="password" placeholder="2"
+                            required>
+                        <label for="password2">Confirm Password</label>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <div class="col-md">
+                    <input class="form-check-input" id="accept-terms" name="accepted" type="checkbox">
+                    <label class="form-check-label" for="accept-terms">Qaydalari oxudum ve qebul etmisem</label>
+                </div>
+            </div>
+            <div class="mb-3 row text-sm-center">
+                <div class="col-md">
+                    <button type="submit" class="btn btn-primary">Qeydiyyatdan kec</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+<!-- <body>
     <form method="POST">
         {% csrf_token %}
         <div>
@@ -38,15 +130,15 @@
     </form>
 
     {% if messages %}
-	<ul class="messages">
-		{% for message in messages %}
-		<li{% if message.tags %} class="{{ message.tags }}" {% endif %}>
-			{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
-			{{ message }}
-			</li>
-			{% endfor %}
-	</ul>
-	{% endif %}
-</body>
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>
+            {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+            {{ message }}
+            </li>
+            {% endfor %}
+    </ul>
+    {% endif %}
+</body> -->
 
 </html>

@@ -1,0 +1,7 @@
+{% extends 'main.html' %}
+{% block title %}Bus No: {{ bus.id }}{% endblock %}
+{% block body %}
+    <div>Description: {{ bus.description }}</div>
+    <div>Capacity: {{ bus.capacity }}</div>
+    <div>Seats remain: {{ bus.seats_remain }}</div>
+{% endblock %}
