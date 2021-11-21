@@ -53,15 +53,55 @@
 </div>
 
 <div class="choice-wrapper">
-    <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-        <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
-        <label class="btn btn-outline-primary" for="btnradio1">Radio 1</label>
+    <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+        <button data-form="bus" type="button" class="form-select-type btn btn-outline-primary active">Avtobus</button>
+        <button data-form="train" type="button" class="form-select-type btn btn-outline-primary">Qatar</button>
+    </div>
 
-        <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
-        <label class="btn btn-outline-primary" for="btnradio2">Radio 2</label>
+    <div class="forms">
+        <div class="form-wrapper form-bus">
+            <form action="" method="get">
+                <div class="row">
+                    <div class="col-3">
+                        <select class="form-select" aria-label="Default select example">
+                            <option selected>Burdan</option>
+                            <option value="1">One</option>
+                            <option value="2">Two</option>
+                            <option value="3">Three</option>
+                        </select>
+                    </div>
+                    <div class="col-3">
 
-        <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
-        <label class="btn btn-outline-primary" for="btnradio3">Radio 3</label>
+                        <select class="form-select" aria-label="Default select example">
+                            <option selected disabled>Buraya</option>
+
+                            <optgroup label="German Cars">
+                                <option value="mercedes">Mercedes</option>
+                                <option value="audi">Audi</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    <div class="col-2">
+                        <label for="start-date-1">Gedis: </label>
+                        <input type="date" name="" id="start-date-1">
+                    </div>
+                    <div class="col-2">
+                        <label for="arrive-date-1">Gelis: </label>
+                        <input type="date" name="" id="start-date-1">
+                    </div>
+                    <div class="col-2 "><button class="btn btn-primary">axtar</button></div>
+
+                </div>
+
+            </form>
+        </div>
+        <div class="form-wrapper form-train hidden">
+            Form2
+        </div>
     </div>
 </div>
+
+<script src="{% static 'js/dashboard.js' %}">
+
+</script>
 {% endblock %}

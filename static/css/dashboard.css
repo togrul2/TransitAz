@@ -4,4 +4,11 @@
 
 .choice-wrapper {
     margin: 20px 200px;
+    padding: 20px 10px;
+    border: 1px solid #555;
+    /* background-color: red; */
+}
+
+.hidden {
+    display: none;
 }

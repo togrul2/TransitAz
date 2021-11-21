@@ -9,4 +9,6 @@ def getBus(request, pk):
 
 
 def dashboard(request):
-    return render(request, 'dashboard.html')
+    return render(request, 'dashboard.html', context={
+        'path': 'dashboard',
+    })
