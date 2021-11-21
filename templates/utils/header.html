@@ -23,9 +23,9 @@
 						Xoş Gəldiniz {{ request.user.first_name }} {{ request.user.last_name }}
 					</a>
 					<ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-						<li><a class="dropdown-item" href="#">Hesabım</a></li>
-						<li><a class="dropdown-item" href="#">Biletlərim</a></li>
-						<li><a class="dropdown-item" href="{% url 'logout' %}?next={{path}}">Hesabdan cıx</a></li>
+						<li><a class="dropdown-item" href="#"><i class="fas fa-user-alt"></i> Hesabım</a></li>
+						<li><a class="dropdown-item" href="#"><i class="fas fa-ticket-alt"></i> Biletlərim</a></li>
+						<li><a class="dropdown-item" href="{% url 'logout' %}?next={{path}}"><i class="fas fa-sign-out-alt"></i> Hesabdan cıx</a></li>
 					</ul>
 				</li>
                 {% else %}

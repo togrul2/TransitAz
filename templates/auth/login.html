@@ -11,38 +11,53 @@
 	<link rel="shortcut icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
 	<title>Daxil Ol</title>
 	<style>
-		.bg-image {
+		body {
 			background-image: url({% static 'media/images/bgi.png' %});
 		}
 	</style>
 </head>
 
 <body>
-	<div class="bg-image"></div>
 	<div class="wrapper">
 		<form action="" method="post">
 			{% csrf_token %}
-			<div class="row">
+			<div class="row header">
 				<h1>Transit Az</h1>
 				<h5>Hesaba daxil</h5>
 			</div>
-			<div class="mt-5 mb-3 row text-sm-end">
-				<label for="inputUsername" class="col-sm-4 col-form-label">Istifadəçi
-					adı</label>
-				<div class="col-sm-8">
-					<input name="username" type="text" class="form-control" id="inputUsername"
-						placeholder="İstifadəçi adı" required>
-				</div>
-			</div>
-			<div class="mb-3 row text-sm-end">
-				<label for="inputPassword" class="col-sm-4 col-form-label">Şifrə</label>
-				<div class="col-sm-8">
-					<input name="password" type="password" class="form-control" id="inputPassword" placeholder="*******"
-						required>
-				</div>
-			</div>
+{#			<div class="mt-5 mb-3 row text-sm-end">#}
+{#				<label for="inputUsername" class="col-sm-4 col-form-label">Istifadəçi#}
+{#					adı</label>#}
+{#				<div class="col-sm-8">#}
+{#					<input name="username" type="text" class="form-control" id="inputUsername"#}
+{#						placeholder="İstifadəçi adı" required>#}
+{#				</div>#}
+{#			</div>#}
+{#			<div class="mb-3 row text-sm-end">#}
+{#				<label for="inputPassword" class="col-sm-4 col-form-label">Şifrə</label>#}
+{#				<div class="col-sm-8">#}
+{#					<input name="password" type="password" class="form-control" id="inputPassword" placeholder="*******"#}
+{#						required>#}
+{#				</div>#}
+{#			</div>#}
+            <div class="mb-3 row text-sm-end">
+                <div class="col-md">
+                    <div class="form-floating">
+                        <input class="form-control" id="username" name="username" type="text" placeholder="a" required>
+                        <label for="username">Istifadeci adi</label>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3 row text-sm-end">
+                <div class="col-md">
+                    <div class="form-floating">
+                        <input class="form-control" id="password" name="password" type="password" placeholder="a" required>
+                        <label for="password">Password</label>
+                    </div>
+                </div>
+            </div>
 			<div class="mb-3 row">
-				<label style="text-align: end;" for="inputRemember" class="col-4 col-form-check-label">Yadda
+				<label for="inputRemember" class="col-4 col-form-check-label text-sm-end">Yadda
 					saxla</label>
 				<div class="col-8">
 					<input class="form-check-input" type="checkbox" name="remember_me" value="remember_me"

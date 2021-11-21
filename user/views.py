@@ -84,6 +84,7 @@ def registerUser(request):
         username = request.POST.get('username')
         password1 = request.POST.get('password1')
         password2 = request.POST.get('password2')
+        agreed = request.POST.get('accepted')
 
         if len(password1) < 6:
             messages.error(request, 'Şifrə ən azı 6 simvoldan ibarət olmalıdır')
@@ -99,12 +100,14 @@ def registerUser(request):
 
         if User.objects.filter(username=username).exists():
             messages.error(request, 'İstifadəçi adı artıq islənir, başqasını seçin')
-            return render(request, 'auth/register.html', context={'data': context}, status=409)
+            return render(request, 'auth/register.html', context={'data': context})
 
         if User.objects.filter(email=email).exists():
             messages.error(request, 'Email adresi artıq islənir, başqasını seçin')
-            return render(request, 'auth/register.html', context={'data': context}, status=409)
+            return render(request, 'auth/register.html', context={'data': context})
 
+        if agreed != 'on':
+            messages.error(request, 'Qaydaları qəbul etməniz lazım')
         if has_error:
             return render(request, 'auth/register.html', context={'data': request.POST})
 
@@ -115,7 +118,7 @@ def registerUser(request):
         if not has_error:
             send_activation_email(request, user)
             messages.success(request, 'We sent you an email to verify your account')
-            return redirect('login')
+            return redirect('activation_request')
 
     return render(request, template_name='auth/register.html')
 
@@ -129,6 +132,10 @@ def main(request):
     return render(request, 'main.html', context={'path': 'main'})
 
 
+def activation_request(request):
+    return render(request, 'auth/activation_requested.html')
+
+
 def activate_user(request, uidb64, token):
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
@@ -139,7 +146,6 @@ def activate_user(request, uidb64, token):
     if user and generate_token.check_token(user, token):
         user.is_verified = True
         user.save()
-
         messages.success(request, 'Email is verified')
-        return redirect('login')
+        return render(request, 'auth/activation_success.html')
     return render(request, 'auth/activate_failed.html', context={'user': user})

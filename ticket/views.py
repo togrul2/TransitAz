@@ -6,3 +6,7 @@ from .models import Bus
 def getBus(request, pk):
     bus = Bus.objects.get(id=pk)
     return render(request, 'bus.html', context={'bus': bus})
+
+
+def dashboard(request):
+    return render(request, 'dashboard.html')

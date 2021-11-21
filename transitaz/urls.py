@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from user import views as user_views
+from ticket import views as ticket_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,6 +26,8 @@ urlpatterns = [
     path('register/', user_views.registerUser, name='register'),
     path('logout/', user_views.logoutUser, name='logout'),
     path('', user_views.main, name='main'),
-    path('activate-user/<str:uidb64>/<str:token>', user_views.activate_user, name='activate')
+    path('activate-user/<str:uidb64>/<str:token>', user_views.activate_user, name='activate'),
+    path('activation-request', user_views.activation_request, name='activation_request'),
     # Ticket views
+    path('dashboard/', ticket_views.dashboard, name='dashboard'),
 ]
