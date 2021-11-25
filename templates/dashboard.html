@@ -52,56 +52,121 @@
     </div>
 </div>
 
-<div class="choice-wrapper">
-    <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-        <button data-form="bus" type="button" class="form-select-type btn btn-outline-primary active">Avtobus</button>
-        <button data-form="train" type="button" class="form-select-type btn btn-outline-primary">Qatar</button>
-    </div>
-
+<div class="choice-wrapper ">
     <div class="forms">
-        <div class="form-wrapper form-bus">
-            <form action="" method="get">
-                <div class="row">
-                    <div class="col-3">
-                        <select class="form-select" aria-label="Default select example">
-                            <option selected>Burdan</option>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
-                        </select>
-                    </div>
-                    <div class="col-3">
+        <form action="{% url 'search-tickets' %}" method="get">
+            <h1>Bilet elde edin</h1>
+            <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                <input type="radio" class="btn-check radio-choice" name="radio-choice" id="radio-bus" value="bus-search"
+                    autocomplete="off" checked>
+                <label class="btn btn-outline-primary" for="radio-bus">Avtobus</label>
 
-                        <select class="form-select" aria-label="Default select example">
-                            <option selected disabled>Buraya</option>
-
-                            <optgroup label="German Cars">
-                                <option value="mercedes">Mercedes</option>
-                                <option value="audi">Audi</option>
-                            </optgroup>
-                        </select>
-                    </div>
-                    <div class="col-2">
-                        <label for="start-date-1">Gedis: </label>
-                        <input type="date" name="" id="start-date-1">
-                    </div>
-                    <div class="col-2">
-                        <label for="arrive-date-1">Gelis: </label>
-                        <input type="date" name="" id="start-date-1">
-                    </div>
-                    <div class="col-2 "><button class="btn btn-primary">axtar</button></div>
-
+                <input type="radio" class="btn-check radio-choice" name="radio-choice" id="radio-train"
+                    value="train-search" autocomplete="off">
+                <label class="btn btn-outline-primary" for="radio-train">Qatar</label>
+            </div>
+            <div class="mt-3 form-wrapper form-bus">
+                <div class="row ps-1">
+                    <h5>Avtobus bileti</h5>
                 </div>
-
-            </form>
-        </div>
-        <div class="form-wrapper form-train hidden">
-            Form2
-        </div>
+                <div class="row">
+                    <div class="col-xl-3 my-2">
+                        <label for="bus-start">Buraya:</label>
+                        <select id="bus-start" name="bus-start-station" class="form-select" required
+                            aria-label="Default select example">
+                            <option selected disabled></option>
+                            {% for city, stations in bus_destinations.items %}
+                            <optgroup label="{{city}}">
+                                {% for station in stations %}
+                                <option value="{{station}}">{{station}}</option>
+                                {% endfor %}
+                            </optgroup>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-xl-3 my-2">
+                        <label for="bus-arrive">Buraya:</label>
+                        <select id="bus-arrive" name="bus-arrive-station" class="form-select" required
+                            aria-label="Default select example">
+                            <option selected disabled></option>
+                            {% for city, stations in bus_destinations.items %}
+                            <optgroup label="{{city}}">
+                                {% for station in stations %}
+                                <option value="{{station}}">{{station}}</option>
+                                {% endfor %}
+                            </optgroup>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-xl-2 my-2">
+                        <label for="start-date-1">Gedis: </label>
+                        <input class="form-control" type="date" name="bus-start-date" id="start-date-1">
+                    </div>
+                    <div class="col-xl-2 my-2">
+                        <label for="arrive-date-1">Gelis: </label>
+                        <input class="form-control" type="date" name="bus-arrive-date" id="start-date-1">
+                    </div>
+                    <div class="col-xl-2 my-2 text-center d-flex flex-column justify-content-between">
+                        <div></div>
+                        <div>
+                            <button class="btn btn-primary btn-search w-50">Axtar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-3 form-wrapper form-train hidden">
+                <div class="row ps-1">
+                    <h5>Qatar bileti</h5>
+                </div>
+                <div class="row">
+                    <div class="col-xl-3 my-2">
+                        <label for="bus-start">Buraya:</label>
+                        <select id="bus-start" name="bus-start-station" class="form-select"
+                            aria-label="Default select example">
+                            <option selected disabled></option>
+                            {% for city, stations in train_destinations.items %}
+                            <optgroup label="{{city}}">
+                                {% for station in stations %}
+                                <option value="{{station}}">{{station}}</option>
+                                {% endfor %}
+                            </optgroup>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-xl-3 my-2">
+                        <label for="bus-arrive">Buraya:</label>
+                        <select id="bus-arrive" name="bus-arrive-station" class="form-select"
+                            aria-label="Default select example">
+                            <option selected disabled></option>
+                            {% for city, stations in train_destinations.items %}
+                            <optgroup label="{{city}}">
+                                {% for station in stations %}
+                                <option value="{{station}}">{{station}}</option>
+                                {% endfor %}
+                            </optgroup>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-xl-2 my-2">
+                        <label for="start-date-1">Gedis: </label>
+                        <input class="form-control" type="date" name="bus-start-date" id="start-date-1">
+                    </div>
+                    <div class="col-xl-2 my-2">
+                        <label for="arrive-date-1">Gelis: </label>
+                        <input class="form-control" type="date" name="bus-arrive-date" id="start-date-1">
+                    </div>
+                    <div class="col-xl-2 my-2 text-center d-flex flex-column justify-content-between">
+                        <div></div>
+                        <div>
+                            <button class="btn btn-primary btn-search w-50">Axtar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
 
-<script src="{% static 'js/dashboard.js' %}">
+<script src="{% static 'js/dashboard.js' %}"></script>
 
-</script>
 {% endblock %}

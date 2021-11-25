@@ -30,4 +30,5 @@ urlpatterns = [
     path('activation-request', user_views.activation_request, name='activation_request'),
     # Ticket views
     path('dashboard/', ticket_views.dashboard, name='dashboard'),
+    path('tickets/', ticket_views.search_tickets, name='search-tickets'),
 ]
