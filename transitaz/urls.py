@@ -15,12 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+# noinspection PyCompatibility
 from user import views as user_views
 from ticket import views as ticket_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('ticket.urls')),
+
     # Auth views
     path('login/', user_views.loginUser, name='login'),
     path('register/', user_views.registerUser, name='register'),
@@ -30,5 +31,5 @@ urlpatterns = [
     path('activation-request', user_views.activation_request, name='activation_request'),
     # Ticket views
     path('dashboard/', ticket_views.dashboard, name='dashboard'),
-    path('tickets/', ticket_views.search_tickets, name='search-tickets'),
+    path('ticket/', include('ticket.urls')),
 ]

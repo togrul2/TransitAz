@@ -1,5 +1,8 @@
 from django.shortcuts import render
+from django.http import JsonResponse
 from .models import City, Bus, Train
+from user.models import User
+import json
 
 # Create your views here.
 
@@ -50,6 +53,11 @@ def search_tickets(request):
                                        arrives_at__contains=arrive_date)
 
     return render(request, 'tickets.html', context={'path': 'search-tickets',
+                                                    'option': option,
                                                     'results': results,
                                                     'bus_destinations': bus_destinations,
                                                     'train_destinations': train_destinations})
+
+
+def tickets_cart(request):
+    return render(request, 'tickets-cart.html', context={'path': 'tickets-cart'})

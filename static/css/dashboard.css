@@ -12,3 +12,10 @@
 .hidden {
     display: none;
 }
+
+
+@media (min-width: 767px){
+    .choice-wrapper{
+        margin: 40px 200px;
+    }
+}

@@ -31,7 +31,7 @@
                     <div class="row">
                         <div class="col-xl-3 my-2">
                             <label for="bus-start">Buraya:</label>
-                            <select id="bus-start" name="bus-start-station" class="form-select" required
+                            <select id="bus-start" name="bus-start-station" class="form-select"
                                 aria-label="Default select example">
                                 <option selected disabled></option>
                                 {% for city, stations in bus_destinations.items %}
@@ -45,7 +45,7 @@
                         </div>
                         <div class="col-xl-3 my-2">
                             <label for="bus-arrive">Buraya:</label>
-                            <select id="bus-arrive" name="bus-arrive-station" class="form-select" required
+                            <select id="bus-arrive" name="bus-arrive-station" class="form-select"
                                 aria-label="Default select example">
                                 <option selected disabled></option>
                                 {% for city, stations in bus_destinations.items %}
@@ -59,16 +59,16 @@
                         </div>
                         <div class="col-xl-2 my-2">
                             <label for="start-date-1">Gedis: </label>
-                            <input class="form-control" type="date" name="bus-start-date" id="start-date-1">
+                            <input class="form-control date-input" type="date" name="bus-start-date" id="start-date-1">
                         </div>
                         <div class="col-xl-2 my-2">
                             <label for="arrive-date-1">Gelis: </label>
-                            <input class="form-control" type="date" name="bus-arrive-date" id="start-date-1">
+                            <input class="form-control date-input" type="date" name="bus-arrive-date" id="start-date-1">
                         </div>
                         <div class="col-xl-2 my-2 text-center d-flex flex-column justify-content-between">
                             <div></div>
                             <div>
-                                <button class="btn btn-primary btn-search w-50">Axtar</button>
+                                <button class="btn btn-primary btn-search w-50" type="submit">Axtar</button>
                             </div>
                         </div>
                     </div>
@@ -108,16 +108,16 @@
                         </div>
                         <div class="col-xl-2 my-2">
                             <label for="start-date-1">Gedis: </label>
-                            <input class="form-control" type="date" name="bus-start-date" id="start-date-1">
+                            <input class="form-control date-input" type="date" name="bus-start-date" id="start-date-1">
                         </div>
                         <div class="col-xl-2 my-2">
                             <label for="arrive-date-1">Gelis: </label>
-                            <input class="form-control" type="date" name="bus-arrive-date" id="start-date-1">
+                            <input class="form-control date-input" type="date" name="bus-arrive-date" id="start-date-1">
                         </div>
                         <div class="col-xl-2 my-2 text-center d-flex flex-column justify-content-between">
                             <div></div>
                             <div>
-                                <button class="btn btn-primary btn-search w-50">Axtar</button>
+                                <button class="btn btn-primary btn-search w-50" type='submit'>Axtar</button>
                             </div>
                         </div>
                     </div>
@@ -126,25 +126,45 @@
         </div>
     </div>
     <div class="container">
+
+        {% if results %}
         {% for result in results %}
         <div class="card my-2">
+            <div class="card-header">
+                {% if option == 'bus-search' %}
+                Avtobus
+                {% elif option == 'train-search' %}
+                Qatar
+                {% endif %}
+            </div>
             <div class="card-body">
                 <h5 class="card-title">{{result.starting_point}} - {{result.destination}}</h5>
                 <p class="card-text">
                     {{result.departures_at|date:"d/m/Y H:i"}} - {{result.arrives_at|date:"d/m/Y H:i"}}
                 </p>
+                <p class="card-text">{{result.ticket_price|floatformat:2}} ₼</p>
                 <p class="card-text">
-                    {% if result.seats_remain%}
+                    {% if result.seats_remain %}
                     {{result.seats_remain}} yer var
                     {% else %}
                     Biletler qalmayib
                     {% endif %}</p>
-                <a href="#" class="btn btn-primary">Bilet Al</a>
+                <button class="add-button btn btn-primary" data-item_id="{{result.id}}" data-item_name="{{result}}"
+                    data-item_price="{{result.ticket_price|floatformat:2}}"
+                    data-item_starting_point="{{result.starting_point}}" data-item_destination="{{result.destination}}"
+                    data-item_departures_at="{{result.departures_at|date:'d/m/Y H:i'}}" data-item_type="{{option}}"
+                    data-item_arrives_at="{{result.arrives_at|date:'d/m/Y H:i'}}"
+                    data-item_seats_remain="{{result.seats_remain}}">Əlavə
+                    Et</button>
             </div>
         </div>
         {% endfor %}
+        {% elif request.GET|length %}
+        <div class="alert alert-danger" role="alert">Biletlər tapılmadı</div>
+        {% endif %}
     </div>
 </div>
+
 <script src="{% static 'js/dashboard.js' %}"></script>
 
 {% endblock %}

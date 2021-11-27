@@ -1,0 +1,31 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block title %}Biletler{% endblock %}
+{% block head %}
+
+{% endblock %}
+{% block body %}
+<div class="container my-5">
+    <h1>Biletler</h1>
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>ID:</th>
+                <th>Nəqliyyat:</th>
+                <th>Bilet:</th>
+                <th>Tarix:</th>
+                <th>Qiymet:</th>
+                <th>Say:</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody class='table-body'>
+
+        </tbody>
+    </table>
+</div>
+
+<script src="{% static 'js/ticket-cart.js' %}"></script>
+
+{% endblock %}

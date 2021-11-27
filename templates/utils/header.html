@@ -7,14 +7,17 @@
 		</a>
 		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
 			aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-			<span class="navbar-toggler-icon"></span>
+			<i class="navbar-toggler-icon"></i>
 		</button>
 		<div class="collapse navbar-collapse" id="navbarText">
 			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-				<li class="nav-item"><a class="nav-link active" aria-current="page"
-						href="{% url 'dashboard' %}">Dashboard</a></li>
-				<li class="nav-item"><a class="nav-link" href="{% url 'search-tickets' %}">Biletler</a></li>
-				<li class="nav-item"><a class="nav-link" href="#">Pricing</a></li>
+				<li class="nav-item"><a class="nav-link {% if path == 'dashboard' %}active{% endif %}"
+						aria-current="page" href="{% url 'dashboard' %}">Dashboard</a></li>
+				<li class="nav-item"><a class="nav-link {% if path == 'search-tickets' %}active{% endif %}"
+						href="{% url 'search-tickets' %}">Bilet Axtar</a></li>
+				<li class="nav-item"><a class="nav-link {% if path == 'tickets-cart' %}active{% endif %}"
+						href="{% url 'tickets-cart' %}">Bilel sebeti <span
+							class="badge badge-count-tickets bg-secondary">0</span></a></li>
 			</ul>
 			<ul class="navbar-nav mb-2 mb-lg-0">
 				{% if request.user.is_authenticated %}
@@ -32,19 +35,21 @@
 						<li><a class="dropdown-item" href="#"><i class="fas fa-user-alt"></i> Hesabım</a></li>
 						<li><a class="dropdown-item" href="#"><i class="fas fa-ticket-alt"></i> Biletlərim</a></li>
 						<li>
-							<a class="dropdown-item" href="{% url 'logout' %}?next={{path}}">
-								<i class="fas fa-sign-out-alt"></i>Hesabdan cıx
+							<a class="dropdown-item logout-link" href="{% url 'logout' %}?next={{path}}">
+								<i class="fas fa-sign-out-alt"></i> Hesabdan cıx
 							</a>
 						</li>
 					</ul>
 				</li>
 				{% else %}
 				<li class="nav-item"><a class="nav-link" href="{% url 'login' %}?next={{path}}">Daxil Ol</a></li>
-				<li class="nav-item"><a class="nav-link" href="{% url 'register' %}?next={{path}}">Qeydiyyatdan Kec</a>
-				</li>
+				<li class="nav-item"><a class="nav-link" href="{% url 'register' %}?next={{path}}">Hesab Aç</a></li>
 			</ul>
-
 			{% endif %}
 		</div>
 	</div>
 </nav>
+
+<script>
+	updateCountBadge();
+</script>
