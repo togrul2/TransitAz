@@ -28,8 +28,11 @@ dateInputs.forEach(dateInput => {
 
 addButtons.forEach(addButton => {
     addButton.addEventListener('click', () => {
+        data = JSON.parse(localStorage.getItem("tickets"));
+
         const item = {
-            id: addButton.dataset.item_id,
+            id: data ? data.length: 0,
+            back_id: addButton.dataset.item_id,
             type:addButton.dataset.item_type,
             name: addButton.dataset.item_name,
             price: addButton.dataset.item_price,
@@ -41,14 +44,17 @@ addButtons.forEach(addButton => {
             count:1,
         };
         
-        data = JSON.parse(localStorage.getItem("tickets"));
-        if(data)
+
+        let tickets;
+        if(data != null){
+            tickets = [...data]
             if(data.filter(e => e.id === item.id && e.type === item.type).length === 0)
-                data.push(item);
-        else if(data == [])
-            data = [item];
+                tickets.push(item);
+        }
+        else
+            tickets = [item];
         
-        localStorage.setItem("tickets", JSON.stringify(data));
+        localStorage.setItem("tickets", JSON.stringify(tickets));
         updateCountBadge();
     });
 });

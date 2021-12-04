@@ -1,3 +1,5 @@
+import datetime
+from django.utils import timezone
 from django.db import models
 from user.models import User
 # Create your models here.
@@ -36,7 +38,7 @@ class Bus(models.Model):
     capacity = models.IntegerField()
     ticket_price = models.FloatField()
     departures_at = models.DateTimeField()
-    arrives_at = models.DateTimeField()
+    arrives_at = models.DateTimeField(null=True, blank=True)
 
     @property
     def seats_remain(self):
@@ -47,12 +49,21 @@ class Bus(models.Model):
 
 
 class BusTicket(models.Model):
+    class Meta:
+        ordering = '-purchased_at',
     bus = models.ForeignKey(Bus, null=True, on_delete=models.SET_NULL, related_name='bus_tickets')
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bus_tickets')
     purchased_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'{self.owner}: {self.bus} at {self.purchased_at}'
+        return f'{self.owner}: {self.bus}'
+
+    @property
+    def is_usable(self):
+        if not self.bus.arrives_at:
+            return self.bus.departures_at > timezone.now()
+        else:
+            return self.bus.arrives_at > timezone.now()
 
 
 class TrainStation(models.Model):
@@ -75,7 +86,7 @@ class Train(models.Model):
     capacity = models.IntegerField()
     ticket_price = models.FloatField()
     departures_at = models.DateTimeField()
-    arrives_at = models.DateTimeField()
+    arrives_at = models.DateTimeField(null=True, blank=True)
 
     @property
     def seats_remain(self):
@@ -86,9 +97,19 @@ class Train(models.Model):
 
 
 class TrainTicket(models.Model):
+    class Meta:
+        ordering = '-purchased_at',
+
     train = models.ForeignKey(Train, null=True, on_delete=models.SET_NULL, related_name='train_tickets')
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='train_tickets')
     purchased_at = models.DateTimeField(auto_now_add=True)
 
+    @property
+    def is_usable(self):
+        if not self.train.arrives_at:
+            return self.train.departures_at > timezone.now()
+        else:
+            return self.train.arrives_at > timezone.now()
+
     def __str__(self):
-        return f'{self.owner}: {self.train} at {self.purchased_at}'
+        return f'{self.owner}: {self.train} at {self.purchased_at.strftime("%Y-%m-%d %H:%M")}'

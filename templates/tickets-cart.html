@@ -3,29 +3,49 @@
 
 {% block title %}Biletler{% endblock %}
 {% block head %}
-
+<style>
+    .hidden {
+        display: none;
+    }
+</style>
 {% endblock %}
 {% block body %}
 <div class="container my-5">
     <h1>Biletler</h1>
-    <table class="table table-striped table-hover">
-        <thead>
-            <tr>
-                <th>ID:</th>
-                <th>Nəqliyyat:</th>
-                <th>Bilet:</th>
-                <th>Tarix:</th>
-                <th>Qiymet:</th>
-                <th>Say:</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody class='table-body'>
+    <div class="row">
+        <div class="col-lg-8">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>No:</th>
+                        <th>Nəqliyyat:</th>
+                        <th>Bilet:</th>
+                        <th>Tarix:</th>
+                        <th>Qiymet:</th>
+                        <th>Say:</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody class='table-body'>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-lg-4">
+            <div class="list-group list">
+                <div class="list-group-item">
+                    <h2>Odemeye kec</h2>
+                </div>
+                <div class="list-group-item">
+                    <p class="info_p">Toplam mebleg: 32</p>
+                    <p class="info_p">Bilet sayi: 5</p>
+                </div>
+            </div>
+            <div class="list-group-item pay-group-item">
+                <a href="{% url 'payment-done' %}" class="btn btn-primary d-block pay-btn">Go to payment</a>
+            </div>
+        </div>
+    </div>
 
-        </tbody>
-    </table>
-</div>
+    <script src="{% static 'js/ticket-cart.js' %}"></script>
 
-<script src="{% static 'js/ticket-cart.js' %}"></script>
-
-{% endblock %}
+    {% endblock %}

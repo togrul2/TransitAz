@@ -149,3 +149,7 @@ def activate_user(request, uidb64, token):
         messages.success(request, 'Email is verified')
         return render(request, 'auth/activation_success.html')
     return render(request, 'auth/activate_failed.html', context={'user': user})
+
+
+def my_profile(request):
+    return render(request, 'my-profile.html', context={})

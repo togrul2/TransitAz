@@ -1,0 +1,142 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block title %}Biletlərim{% endblock %}
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/my-tickets.css' %}">
+{% endblock %}
+{% block body %}
+    <div class="container">
+        <h1 class="mt-5 mb-2">Biletlərim</h1>
+        <div class="row">
+            <div class="col-4">
+                <h4>Avtobus</h4>
+                {% for bus_ticket in bus_tickets %}
+                    {% if bus_ticket.is_usable %}
+                    <div class="card-usable card my-2" style="width: 18rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ bus_ticket.bus.description }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">{{ bus_ticket.bus.departures_at|date:'d-M'}}
+                            {% if bus_ticket.bus.arrives_at %}
+                                - {{ bus_ticket.bus.arrives_at|date:'d-M' }}
+                            {% endif %}
+                            </h6>
+                            <p class="card-text">Alinma tarixi: {{ bus_ticket.purchased_at|date:'d-M Y, H:i' }}</p>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="card-unusable card my-2">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ bus_ticket.bus.description }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">{{ bus_ticket.bus.departures_at|date:'d-M'}}
+                            {% if bus_ticket.bus.arrives_at %}
+                                - {{ bus_ticket.bus.arrives_at|date:'d-M' }}
+                            {% endif %}
+                            </h6>
+                            <p class="card-text">Alinma tarixi: {{ bus_ticket.purchased_at|date:'d-M Y, H:i' }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        {% if bus_tickets.has_previous %}
+                            <li class="page-item">
+                            <a class="page-link" href="?bus_page={{ bus_tickets.previous_page_number }}&train_page={{ train_tickets.number }}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                        {% for bus_page in bus_tickets.paginator.page_range %}
+                            {% if bus_page == bus_tickets.number %}
+                            <li class="page-item active"><a class="page-link" href="?bus_page={{bus_page}}&train_page={{ train_tickets.number }}">{{ bus_page }}</a></li>
+                            {% else %}
+                            <li class="page-item"><a class="page-link" href="?bus_page={{bus_page}}&train_page={{ train_tickets.number }}">{{ bus_page }}</a></li>
+                            {% endif %} 
+                        {% endfor %}
+                        {% if bus_tickets.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?bus_page={{ bus_tickets.next_page_number }}&train_page={{ train_tickets.number }}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+            <div class="col-4">
+                <h4>Qatar</h4>
+                {% for train_ticket in train_tickets %}
+                    {% if train_ticket.is_usable %}
+                        <div class="card my-2 card-usable">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ train_ticket.train.description }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">{{ train_ticket.train.departures_at|date:'d-M'}}
+                            {% if train_ticket.train.arrives_at %}
+                                - {{ train_ticket.train.arrives_at|date:'d-M' }}
+                            {% endif %}
+                            </h6>
+                            <p class="card-text">Alinma tarixi: {{ train_ticket.purchased_at|date:'d-M Y, H:i' }}</p>
+                        </div>
+                    </div>
+                    {% else %}
+                        <div class="card my-2 card-unusable" style="width: 18rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ train_ticket.train.description }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">{{ train_ticket.train.departures_at|date:'d-M'}}
+                            {% if train_ticket.train.arrives_at %}
+                                - {{ train_ticket.train.arrives_at|date:'d-M' }}
+                            {% endif %}
+                            </h6>
+                            <p class="card-text">Alinma tarixi: {{ train_ticket.purchased_at|date:'d-M Y, H:i' }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        {% if train_tickets.has_previous %}
+                            <li class="page-item">
+                            <a class="page-link" href="?bus_page={{bus_tickets.number}}&train_page={{ train_tickets.previous_page_number }}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                        {% for train_page in train_tickets.paginator.page_range %}
+                            {% if train_page == train_tickets.number %}
+                            <li class="page-item active"><a class="page-link" href="?bus_page={{bus_tickets.number}}&train_page={{train_page}}">{{ train_page }}</a></li>
+                            {% else %}
+                            <li class="page-item"><a class="page-link" href="?bus_page={{bus_tickets.number}}&train_page={{train_page}}">{{ train_page }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                        {% if train_tickets.has_next%}
+                        <li class="page-item">
+                            <a class="page-link" href="?bus_page={{bus_tickets.number}}&train_page={{ train_tickets.next_page_number }}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+            <div class="col-4">
+                <div class="list-count list-group list">
+                    <div class="list-group-item">
+                        <h3>Toplam bilet sayi: {{ total_count }}</h3>
+                    </div>
+                    <div class="list-group-item">
+                        <h5>Toplam avtobus bilet sayi: {{ bus_count }}</h5>
+                    </div>
+                    <div class="list-group-item">
+                        <h5>Toplam qatar bilet sayi: {{ train_count }}</h5>
+                    </div>
+                    <div class="list-group-item">
+                        <h5>Toplam movcud avtobus bilet sayi: {{ usable_bus_tickets_count }}</h5>
+                    </div>
+                    <div class="list-group-item">
+                        <h5>Toplam movcud avtobus bilet sayi: {{ usable_train_tickets_count }}</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

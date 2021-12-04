@@ -32,4 +32,6 @@ urlpatterns = [
     # Ticket views
     path('dashboard/', ticket_views.dashboard, name='dashboard'),
     path('ticket/', include('ticket.urls')),
+    # User views
+    path('profile/', user_views.my_profile, name='my_profile'),
 ]

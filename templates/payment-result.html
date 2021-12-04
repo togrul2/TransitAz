@@ -1,0 +1,21 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/payment-result.css' %}">
+{% endblock %}
+{% block title %}{% if success %}Payment done{% else %}Sign in for making purchase{% endif %}{% endblock %}
+{% block body %}
+<div class="wrapper">
+    {% if success %}
+    <div class="message-box">
+        <h2>Purchase done!</h2>
+        <p>Your purchase was done</p>
+    </div>
+    {% else %}
+    <div class="message-box">
+        <h2>Purchase failed!</h2>
+        <p>Your need to <a href="{% url 'login' %}">sign in</a> at first</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
