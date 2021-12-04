@@ -21,7 +21,6 @@ from ticket import views as ticket_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-
     # Auth views
     path('login/', user_views.loginUser, name='login'),
     path('register/', user_views.registerUser, name='register'),
