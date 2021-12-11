@@ -6,10 +6,13 @@ from .models import *
 
 admin.site.register(City)
 
-admin.site.register(BusStation)
-admin.site.register(Bus)
-admin.site.register(BusTicket)
+admin.site.register(Station)
+admin.site.register(Transport)
+# admin.site.register(Ticket)
 
-admin.site.register(TrainStation)
-admin.site.register(Train)
-admin.site.register(TrainTicket)
+
+@admin.register(Ticket)
+class TicketAdmin(admin.ModelAdmin):
+    list_display = '__str__', 'purchased_at'
+
+

@@ -10,9 +10,10 @@ from .models import User
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     fields = (
-        'is_superuser', 'is_staff', 'username', 'first_name', 'last_name', 'groups', 'user_permissions', 'email',
-        'is_verified',
-        'is_active')
+        'is_superuser', 'is_staff', 'is_verified', 'is_active',
+        'username', 'first_name', 'last_name', 'email', 'phone_number',
+        'groups', 'user_permissions'
+    )
 
     class Meta:
         model = User

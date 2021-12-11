@@ -14,6 +14,10 @@
 		body {
 			background-image: url({% static 'media/images/bgi.png' %});
 		}
+
+        .messages {
+            list-style: none;
+        }
 	</style>
 </head>
 
@@ -22,24 +26,9 @@
 		<form action="" method="post">
 			{% csrf_token %}
 			<div class="row header">
-				<h1>Transit Az</h1>
+				<h1><a href="{% url 'main' %}" class="link-primary">Transit Az</a></h1>
 				<h5>Hesaba daxil</h5>
 			</div>
-{#			<div class="mt-5 mb-3 row text-sm-end">#}
-{#				<label for="inputUsername" class="col-sm-4 col-form-label">Istifadəçi#}
-{#					adı</label>#}
-{#				<div class="col-sm-8">#}
-{#					<input name="username" type="text" class="form-control" id="inputUsername"#}
-{#						placeholder="İstifadəçi adı" required>#}
-{#				</div>#}
-{#			</div>#}
-{#			<div class="mb-3 row text-sm-end">#}
-{#				<label for="inputPassword" class="col-sm-4 col-form-label">Şifrə</label>#}
-{#				<div class="col-sm-8">#}
-{#					<input name="password" type="password" class="form-control" id="inputPassword" placeholder="*******"#}
-{#						required>#}
-{#				</div>#}
-{#			</div>#}
             <div class="mb-3 row text-sm-end">
                 <div class="col-md">
                     <div class="form-floating">
@@ -48,12 +37,26 @@
                     </div>
                 </div>
             </div>
-            <div class="mb-3 row text-sm-end">
+            <div class="mb-2 row text-sm-end">
                 <div class="col-md">
                     <div class="form-floating">
                         <input class="form-control" id="password" name="password" type="password" placeholder="a" required>
                         <label for="password">Password</label>
                     </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md">
+                    {% if messages %}
+                    <ul class="messages">
+                        {% for message in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>
+                            <div class="alert-danger">{{ message }}</div>
+{#                            {{ message }}#}
+                        </li>
+                            {% endfor %}
+                    </ul>
+                    {% endif %}
                 </div>
             </div>
 			<div class="mb-3 row">
@@ -69,18 +72,10 @@
 				<a href="{% url 'register' %}" class="btn btn-outline-primary">Hesab aç</a>
 			</div>
 			<div class="mt-4 d-flex justify-content-center">
-				<a class="btn btn-outline-danger btn-sm" href="#">Şifrə bərpa et</a>
+				<a class="btn btn-outline-danger btn-sm" href="{% url 'reset_password' %}">Şifrə bərpa et</a>
 			</div>
-
 		</form>
 	</div>
-	{% if messages %}
-	<ul class="messages">
-		{% for message in messages %}
-		<li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
-			{% endfor %}
-	</ul>
-	{% endif %}
 	<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 </body>
 

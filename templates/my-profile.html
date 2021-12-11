@@ -2,6 +2,58 @@
 {% load static %}
 {% block title %}Hesabım{% endblock %}
 
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/my-profile.css' %}">
+{% endblock %}
 
 {% block body %}
+<div class="container">
+    <div class="row main-row">
+        <div class="col-md-6 text-center first-col">
+            <div class="profile-container">
+                <h1>{{ request.user.first_name }} {{ request.user.last_name }}</h1>
+                <h5>{{ request.user.username }}</h5>
+                <h6>Elektron poct: {{ request.user.email }}</h6>
+                {% if request.user.phone_number %}
+                <h6>Elaqe nomresi: {{ request.user.phone_number }}</h6>
+                {% else %}
+                <button id='add-phone' class="btn link-primary">Add a phone number</button>
+                <form method="POST" action="{% url 'add_phone' %}" name="add_phone" class="hidden">
+                {% csrf_token %}
+                    <div class="row">
+                        <div class="col-3 text-end">
+                            <label for="phone-number" class="col-form-label">Nomre: </label>
+                        </div>
+                        <div class="col-7">
+                            <div class="input-group">
+                                <div class="input-group-text">+994</div>
+                                <input id='phone-number' name='phone-number' type="text" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <button class="btn btn-primary" type="submit"><i class="fas fa-arrow-right"></i></button>
+                        </div>
+                    </div>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-md-6 profile-menu d-flex justify-content-center">
+            <div class="d-flex flex-column justify-content-evenly">
+                <ul>
+                    <li><a href="{% url 'edit_profile' %}" class="btn btn-outline-primary">Edit profile</a></li>
+                    <li><a href="{% url 'change_password' %}" class="btn btn-outline-primary">Change password</a></li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    let add_phone_btn = document.querySelector('#add-phone');
+    add_phone_btn && add_phone_btn.addEventListener('click', ()=>{
+        document.forms[0].classList.remove('hidden');
+    });
+</script>
 {% endblock %}

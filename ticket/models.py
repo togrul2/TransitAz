@@ -15,101 +15,84 @@ class City(models.Model):
         return self.name
 
 
-class BusStation(models.Model):
+class Station(models.Model):
+    TYPES = (
+        ('Bus', 'Bus'),
+        ('Train', 'Train')
+    )
+
     name = models.CharField(max_length=200)
+    type = models.CharField(max_length=10, choices=TYPES, default='Bus')
     description = models.CharField(max_length=2000)
     region = models.CharField(max_length=50)
-    coords = models.CharField(max_length=100)
-    city = models.ForeignKey(City, on_delete=models.CASCADE, null=True, blank=True, related_name='bus_stations')
+    coords = models.CharField(max_length=1000, null=True, blank=True)
+    city = models.ForeignKey(City, on_delete=models.CASCADE, null=True, blank=True, related_name='stations')
     map_x = models.FloatField(null=True, blank=True)
     map_y = models.FloatField(null=True, blank=True)
 
     def __str__(self):
-        return self.name
+        return f'({self.id}){self.type}: {self.description}'
 
 
-class Bus(models.Model):
-    class Meta:
-        verbose_name_plural = 'busses'
+class Transport(models.Model):
+    TYPES = (
+        ('Bus', 'Bus'),
+        ('Train', 'Train')
+    )
 
     description = models.CharField(max_length=2000)
-    starting_point = models.ForeignKey(BusStation, on_delete=models.CASCADE, related_name='busses_start')
-    destination = models.ForeignKey(BusStation, on_delete=models.CASCADE, related_name='busses_come')
+    type = models.CharField(max_length=10, choices=TYPES, default='Bus')
+    starting_point = models.ForeignKey(Station, on_delete=models.CASCADE, related_name='start')
+    destination = models.ForeignKey(Station, on_delete=models.CASCADE, related_name='arrive')
     capacity = models.IntegerField()
-    ticket_price = models.FloatField()
-    departures_at = models.DateTimeField()
+    units = models.IntegerField(default=1)
+    price = models.FloatField(default=1)
+    low_cost_price = models.FloatField(default=1)
+    business_price = models.FloatField(default=1)
+    departures_at = models.DateTimeField(null=True, blank=True)
     arrives_at = models.DateTimeField(null=True, blank=True)
+    has_seats_for_disabled = models.BooleanField(default=False)
+
+    @property
+    def available_tickets(self):
+        lst = []
+        for i in range(1, self.capacity + 1):
+            if not self.tickets.filter(seat=i).exists():
+                lst.append(i)
+        return lst
 
     @property
     def seats_remain(self):
-        return self.capacity - self.bus_tickets.all().count()
+        return self.capacity - self.tickets.all().count()
 
     def __str__(self):
-        return self.description
+        return f'({self.id}){self.type}: {self.description}'
 
 
-class BusTicket(models.Model):
-    class Meta:
-        ordering = '-purchased_at',
-    bus = models.ForeignKey(Bus, null=True, on_delete=models.SET_NULL, related_name='bus_tickets')
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bus_tickets')
-    purchased_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f'{self.owner}: {self.bus}'
-
-    @property
-    def is_usable(self):
-        if not self.bus.arrives_at:
-            return self.bus.departures_at > timezone.now()
-        else:
-            return self.bus.arrives_at > timezone.now()
-
-
-class TrainStation(models.Model):
-    name = models.CharField(max_length=200)
-    description = models.CharField(max_length=2000)
-    region = models.CharField(max_length=50)
-    coords = models.CharField(max_length=100, null=True, blank=True)
-    city = models.ForeignKey(City, on_delete=models.CASCADE, null=True, blank=True, related_name='train_stations')
-    map_x = models.FloatField(null=True, blank=True)
-    map_y = models.FloatField(null=True, blank=True)
-
-    def __str__(self):
-        return self.name
-
-
-class Train(models.Model):
-    description = models.CharField(max_length=2000)
-    starting_point = models.ForeignKey(TrainStation, on_delete=models.CASCADE, related_name='trains_start')
-    destination = models.ForeignKey(TrainStation, on_delete=models.CASCADE, related_name='trains_come')
-    capacity = models.IntegerField()
-    ticket_price = models.FloatField()
-    departures_at = models.DateTimeField()
-    arrives_at = models.DateTimeField(null=True, blank=True)
-
-    @property
-    def seats_remain(self):
-        return self.capacity - self.train_tickets.all().count()
-
-    def __str__(self):
-        return self.description
-
-
-class TrainTicket(models.Model):
+class Ticket(models.Model):
     class Meta:
         ordering = '-purchased_at',
 
-    train = models.ForeignKey(Train, null=True, on_delete=models.SET_NULL, related_name='train_tickets')
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='train_tickets')
+    ticket_types = (
+        ('Usual', 'Usual'),
+        ('Lowcost', 'Lowcost'),
+        ('Business', 'Business'),
+    )
+
+    type = models.CharField(max_length=100, choices=ticket_types, default='Usual')
+    transport = models.ForeignKey(Transport, null=True, on_delete=models.SET_NULL, related_name='tickets')
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tickets')
+    seat = models.IntegerField(default=1)
+    is_purchased = models.BooleanField(default=False)
     purchased_at = models.DateTimeField(auto_now_add=True)
+    # food_option = models.BooleanField(default=False)
+
+    def was_purchased(self):
+        return self.objects.filter(bus=self.transport, seat=self.seat).exists()
+
+    def __str__(self):
+        return f'{self.type}: {self.owner} - {self.transport}'
 
     @property
     def is_usable(self):
-        if not self.train.arrives_at:
-            return self.train.departures_at > timezone.now()
-        else:
-            return self.train.arrives_at > timezone.now()
-
-    def __str__(self):
-        return f'{self.owner}: {self.train} at {self.purchased_at.strftime("%Y-%m-%d %H:%M")}'
+        return self.transport.departures_at > timezone.now()

@@ -1,0 +1,29 @@
+.main-row{
+    height: 85vh;
+}
+
+.first-col {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.profile-container {
+    width: 500px;
+    padding: 20px 30px;
+    border: 1px solid #777779;
+    border-radius: 10px;
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+}
+
+.profile-menu div{
+    width: 50%;
+}
+
+.profile-menu div ul{
+    list-style-type: none;
+}
+.profile-menu div ul li{
+    margin: 25px 0;
+}
+

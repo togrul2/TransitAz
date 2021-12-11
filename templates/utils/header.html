@@ -12,12 +12,15 @@
 		<div class="collapse navbar-collapse" id="navbarText">
 			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 				<li class="nav-item"><a class="nav-link {% if path == 'dashboard' %}active{% endif %}"
-						aria-current="page" href="{% url 'dashboard' %}">Dashboard</a></li>
+						aria-current="page" href="{% url 'dashboard' %}">Ana səhifə</a></li>
 				<li class="nav-item"><a class="nav-link {% if path == 'search-tickets' %}active{% endif %}"
 						href="{% url 'search-tickets' %}">Bilet Axtar</a></li>
+                <li class="nav-item"><a class="nav-link {% if path == 'map_search' %}active{% endif %}"
+                            href="{% url 'map_search' %}">Bilet Axtar</a></li>
 				<li class="nav-item"><a class="nav-link {% if path == 'tickets-cart' %}active{% endif %}"
 						href="{% url 'tickets-cart' %}">Bilel səbəti <span
 							class="badge badge-count-tickets bg-secondary">0</span></a></li>
+
 			</ul>
 			<ul class="navbar-nav mb-2 mb-lg-0">
 				{% if request.user.is_authenticated %}
@@ -32,8 +35,8 @@
 						{% endif%}
 					</a>
 					<ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-						<li><a class="dropdown-item" href="{% url 'my_profile' %}"><i class="fas fa-user-alt"></i> Hesabım</a></li>
-						<li><a class="dropdown-item" href="{% url 'my-tickets' %}"><i class="fas fa-ticket-alt"></i> Biletlərim</a></li>
+						<li><a class="dropdown-item {% if path == 'my-profile' %}active{% endif %}" href="{% url 'my_profile' %}"><i class="fas fa-user-alt"></i> Hesabım</a></li>
+						<li><a class="dropdown-item {% if path == 'my-tickets' %}active{% endif %}" href="{% url 'my-tickets' %}"><i class="fas fa-ticket-alt"></i> Biletlərim</a></li>
 						<li>
 							<a class="dropdown-item logout-link" href="{% url 'logout' %}?next={{path}}">
 								<i class="fas fa-sign-out-alt"></i> Hesabdan cıx

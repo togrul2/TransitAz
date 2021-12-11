@@ -1,0 +1,79 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block title %}Xerite axtarisi{% endblock %}
+
+{% block head %}
+<style>
+    .wrapper {
+        height:100vh;
+    }
+    #map {
+        height: 80vh;
+        width: 80%;
+    }
+</style>
+
+{% endblock %}
+{% block body %}
+    <div class="wrapper h-100 d-flex">
+        <div>
+            <button class="h-100 btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling"><i class="fas fa-arrow-right"></i>   </button>
+            <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasScrollingLabel">Axtaris</h5>
+                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <form action="">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="one_two_way" id="one-way">
+                            <label class="form-check-label" for="one-way">Gedis</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="one_two_way" id="two-way">
+                            <label class="form-check-label" for="two-way">Gedis ve gayidis</label>
+                        </div>
+
+                        <label class="form-label" for="starting">Burdan:</label>
+                        <input class="form-control" type="text" id="starting">
+
+                        <label class="form-label" for="starting">Buraya:</label>
+                        <input class="form-control" type="text" id="starting">
+
+                        <input class="btn btn-primary mt-2" type="submit" value="Axtar">
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="container d-flex justify-content-center mt-5">
+            <div id="map"></div>
+        </div>
+    </div>
+
+<script>
+    const map = L.map('map').setView([40.5,47.8], 7);
+    const link = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+    {#let departure_selected = false;#}
+
+    L.tileLayer(link, { maxZoom:19 }).addTo(map);
+    const icon = L.icon({
+        iconUrl: '{% static 'media/images/circle-64.ico' %}',
+        shadowUrl: '',
+        iconSize:     [10, 10], // size of the icon
+        iconAnchor:   [10, 10], // point of the icon which will correspond to marker's location
+        shadowAnchor: [0, 0],  // the same for the shadow
+        popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+        })
+
+    {% for station in train_stations %}
+        {% if station.map_x and station.map_y %}
+        const station_{{station.id}} = L.marker([{{station.map_x}}, {{station.map_y}}], {
+            icon: icon,
+        }).addTo(map).addEventListener('click', e=>{
+            console.log(e);
+        });
+        {% endif %}
+    {% endfor %}
+</script>
+
+{% endblock %}

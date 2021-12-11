@@ -18,6 +18,7 @@ from django.urls import path, include
 # noinspection PyCompatibility
 from user import views as user_views
 from ticket import views as ticket_views
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,9 +29,22 @@ urlpatterns = [
     path('', user_views.main, name='main'),
     path('activate-user/<str:uidb64>/<str:token>', user_views.activate_user, name='activate'),
     path('activation-request', user_views.activation_request, name='activation_request'),
+    # Reset Password views
+    path('reset_password/',
+         auth_views.PasswordResetView.as_view(template_name="auth/reset/reset_password_request.html"),
+         name='reset_password'),
+    path('reset_password_sent/',
+         auth_views.PasswordResetDoneView.as_view(template_name="auth/reset/reset_password_sent.html"),
+         name='password_reset_done'),
+    path('reset/<uidb64>/<token>/',
+         auth_views.PasswordResetConfirmView.as_view(template_name="auth/reset/reset_password.html"),
+         name='password_reset_confirm'),
+    path('reset_password_complete',
+         auth_views.PasswordResetCompleteView.as_view(template_name="auth/reset/reset_password_complete.html"),
+         name='password_reset_complete'),
     # Ticket views
     path('dashboard/', ticket_views.dashboard, name='dashboard'),
     path('ticket/', include('ticket.urls')),
     # User views
-    path('profile/', user_views.my_profile, name='my_profile'),
+    path('user/', include('user.urls')),
 ]
