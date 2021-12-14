@@ -10,6 +10,9 @@
     <div class="message-box">
         <h2>Purchase done!</h2>
         <p>Your purchase was done</p>
+        <script>
+            localStorage.removeItem('tickets')
+        </script>
     </div>
     {% else %}
     <div class="message-box">

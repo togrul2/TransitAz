@@ -1,6 +1,6 @@
 // For displayig different search forms
-let [...forms] = document.querySelectorAll('.form-wrapper');
-let [...formButtons] = document.querySelectorAll('.radio-choice');
+const [...forms] = document.querySelectorAll('.form-wrapper');
+const [...formButtons] = document.querySelectorAll('.radio-choice');
 
 forms.forEach(form => {form.classList.add('hidden')});
 if(formButtons[0].checked)
@@ -10,21 +10,19 @@ else if(formButtons[1].checked)
 
 formButtons.forEach(formbutton =>{
     formbutton.addEventListener('change',() => {
-        forms.forEach(form => {form.classList.add('hidden')});
-        if(formbutton.id === 'radio-bus')
-            forms[0].classList.remove('hidden');
-        else if(formbutton.id === 'radio-train')
-            forms[1].classList.remove('hidden');
+       forms[0].classList.toggle('hidden');
+       forms[1].classList.toggle('hidden');
     });
 });
 
-// Disabling chosing past dates and arrive date for one way tickets
+// Disabling choosing past dates and arrive date for one way tickets
 
-let [...dateInputs] = document.querySelectorAll('.date-input');
+const [...dateInputs] = document.querySelectorAll('.date-input');
 const date = new Date();
 const str = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 const is_one_way = document.querySelector('#gedis-tek');
 const [...arrive_dates] = document.querySelectorAll('.arrive-date');
+
 document.forms[0].addEventListener('change', ()=>{
     arrive_dates.forEach(arrive_date=>{
         arrive_date.disabled = is_one_way.checked;
@@ -33,6 +31,14 @@ document.forms[0].addEventListener('change', ()=>{
 
 dateInputs.forEach(dateInput => {
     dateInput.min = str;
+});
+
+const [...info_btns] = document.querySelectorAll('.more-info-btn');
+const data = JSON.parse(localStorage.getItem('tickets'));
+info_btns.forEach(info_btn=>{
+    let id = info_btn.dataset.id.split('_')[1];
+    if(data && data.find(value => value.id == id))
+        info_btn.classList.add('added');
 });
 
 // Add action

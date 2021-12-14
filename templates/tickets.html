@@ -16,21 +16,21 @@
             <form action="{% url 'search-tickets' %}" method="get">
                 <h1>Bilet elde edin</h1>
                 <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                    <input {% if data.radio_choice == 'bus-search' %}checked{% endif %} type="radio" class="btn-check radio-choice" name="radio_choice" id="radio-bus"
+                    <input {% if request.GET.radio_choice == 'bus-search' %}checked{% endif %} type="radio" class="btn-check radio-choice" name="radio_choice" id="radio-bus"
                         value="bus-search" autocomplete="off" checked>
                     <label class="btn btn-outline-primary" for="radio-bus">Avtobus</label>
 
-                    <input {% if data.radio_choice == 'train-search' %}checked{% endif %} type="radio" class="btn-check radio-choice" name="radio_choice" id="radio-train"
+                    <input {% if request.GET.radio_choice == 'train-search' %}checked{% endif %} type="radio" class="btn-check radio-choice" name="radio_choice" id="radio-train"
                         value="train-search" autocomplete="off">
                     <label class="btn btn-outline-primary" for="radio-train">Qatar</label>
                 </div>
                 <div class="my-4">
                     <div class="form-check">
-                        <input {% if data.oneortwoway == 'one' %}checked{% endif %} class="form-check-input" type="radio" value='one' name="oneortwoway" id="gedis-tek" checked>
+                        <input {% if request.GET.oneortwoway == 'one' %}checked{% endif %} class="form-check-input" type="radio" value='one' name="oneortwoway" id="gedis-tek" checked>
                         <label class="form-check-label" for="gedis-tek">Gedis ancaq</label>
                     </div>
                     <div class="form-check">
-                        <input {% if data.oneortwoway == 'two' %}checked{% endif %} class="form-check-input" type="radio" value='two' name="oneortwoway" id="gedis-gayidis">
+                        <input {% if request.GET.oneortwoway == 'two' %}checked{% endif %} class="form-check-input" type="radio" value='two' name="oneortwoway" id="gedis-gayidis">
                         <label class="form-check-label" for="gedis-gayidis">Gedis ve gayidis</label>
                     </div>
                 </div>
@@ -40,49 +40,46 @@
                     </div>
                     <div class="row">
                         <div class="col-xl-2 my-2">
-                            <label for="bus-start">Buraya:</label>
+                            <label class="form-label" for="bus-start">Buraya:</label>
                             <select  id="bus-start" name="bus_start_station" class="form-select">
-                                <option selected>{% if data.bus_start_station %}{{ data.bus_start_station }}{% endif %}</option>
+                                <option {% if not request.GET.bus_start_station %}selected{% endif %} disabled></option>
                                 {% for city, stations in bus_destinations.items %}
                                 <optgroup label="{{city}}">
                                     {% for station in stations %}
-                                    <option value="{{station.id}}">{{station.description}}</option>
+                                    <option {% if request.GET.bus_start_station == station.description %}selected{% endif %} value="{{station.description}}">{{station.description}}</option>
                                     {% endfor %}
                                 </optgroup>
                                 {% endfor %}
                             </select>
                         </div>
                         <div class="col-xl-2 my-2">
-                            <label for="bus-arrive">Buraya:</label>
+                            <label class="form-label" for="bus-arrive">Buraya:</label>
                             <select id="bus-arrive" name="bus_arrive_station" class="form-select"
                                 aria-label="Default select example">
-                                <option selected>{% if data.bus_start_station %}{{ data.bus_arrive_station }}{% endif %}</option>
+                                <option {% if not request.GET.bus_arrive_station %}selected{% endif %} disabled></option>
                                 {% for city, stations in bus_destinations.items %}
                                 <optgroup label="{{city}}">
                                     {% for station in stations %}
-                                    <option value="{{station.id}}">{{station.description}}</option>
+                                    <option {% if request.GET.bus_arrive_station == station.description %}selected{% endif %} value="{{station.description}}">{{station.description}}</option>
                                     {% endfor %}
                                 </optgroup>
                                 {% endfor %}
                             </select>
                         </div>
                         <div class="col-xl-2 my-2">
-                            <label for="start-date-1">Gedis: </label>
-                            <input value="{{ data.bus_start_date }}" class="form-control date-input" type="date" name="bus_start_date" id="start-date-1">
+                            <label class="form-label" for="start-date-1">Gedis: </label>
+                            <input value="{{ request.GET.bus_start_date }}" class="form-control date-input" type="date" name="bus_start_date" id="start-date-1">
                         </div>
                         <div class="col-xl-2 my-2">
-                            <label for="arrive-date-1">Gelis: </label>
-                            <input value="{{ data.bus_arrive_date }}" class="form-control date-input arrive-date" type="date" name="bus_arrive_date" id="arrive-date-1" disabled>
+                            <label class="form-label" for="arrive-date-1">Gelis: </label>
+                            <input value="{{ request.GET.bus_arrive_date }}" class="form-control date-input arrive-date" type="date" name="bus_arrive_date" id="arrive-date-1" disabled>
                         </div>
                         <div class="col-xl-2 my-2">
                             <label class="form-label" for="passenger_count">Adam Sayi: </label>
-                            <input value="{{ data.p_count }}" name="p_count" type="number" id="passenger_count" class="form-control w-50">
+                            <input value="{% if request.GET.p_count%}{{request.GET.p_count}}{% else %}1{% endif %}" min="1" type="number" id="passenger_count" class="form-control" name="p_count">
                         </div>
-                        <div class="col-xl-2 my-2 text-center d-flex flex-column justify-content-between">
-                            <div></div>
-                            <div>
-                                <button class="btn btn-primary btn-search w-75" type="submit">Axtar</button>
-                            </div>
+                        <div class="col-xl-2 my-2 text-center">
+                            <button class="btn btn-primary btn-search w-75 mt-4" type="submit">Axtar</button>
                         </div>
                     </div>
                 </div>
@@ -92,48 +89,45 @@
                     </div>
                     <div class="row">
                         <div class="col-xl-2 my-2">
-                            <label for="train-start">Buraya:</label>
+                            <label class="form-label" for="train-start">Burdan:</label>
                             <select id="train-start" name="train_start_station" class="form-select">
-                                <option {% if not data.train_start_station %}selected{% endif %} disabled></option>
-                                {% for city, stations in train_destinations.items %}
+                                <option {% if not request.GET.train_start_station %}selected{% endif %} disabled></option>
+                                {% for city, stations in train_destinations %}
                                 <optgroup label="{{city}}">
                                     {% for station in stations %}
-                                    <option {% if data.train_start_station|floatformat:0 == station.id|floatformat:0 %}selected{% endif %} value="{{station.id}}">{{station.description}}</option>
+                                    <option {% if request.GET.train_start_station == station.description %}selected{% endif %} value="{{station.description}}">{{station.description}}</option>
                                     {% endfor %}
                                 </optgroup>
                                 {% endfor %}
                             </select>
                         </div>
                         <div class="col-xl-2 my-2">
-                            <label for="train-arrive">Buraya:</label>
+                            <label class="form-label" for="train-arrive">Buraya:</label>
                             <select id="train-arrive" name="train_arrive_station" class="form-select">
-                                <option {% if not data.train_arrive_station %}selected{% endif %} disabled></option>
+                                <option {% if not request.GET.train_arrive_station %}selected{% endif %} disabled></option>
                                 {% for city, stations in train_destinations.items %}
                                 <optgroup label="{{city}}">
                                     {% for station in stations %}
-                                        <option {% if data.train_arrive_station|floatformat:0 == station.id|floatformat:0 %}selected{% endif %} value="{{station.id}}">{{station.description}}</option>
+                                        <option {% if request.GET.train_arrive_station == station.description %}selected{% endif %} value="{{station.description}}">{{station.description}}</option>
                                     {% endfor %}
                                 </optgroup>
                                 {% endfor %}
                             </select>
                         </div>
                         <div class="col-xl-2 my-2">
-                            <label for="start-date-2">Gedis: </label>
-                            <input value="{{ data.train_start_date }}" class="form-control date-input" type="date" name="train_start_date" id="start-date-2">
+                            <label class="form-label" for="start-date-2">Gedis: </label>
+                            <input value="{{ request.GET.train_start_date }}" class="form-control date-input" type="date" name="train_start_date" id="start-date-2">
                         </div>
                         <div class="col-xl-2 my-2">
-                            <label for="arrive-date-2">Gelis: </label>
-                            <input value="{{ data.train_arrive_date }}" class="form-control date-input arrive-date" type="date" name="train_arrive_date" id="arrive-date-2">
+                            <label class="form-label" for="arrive-date-2">Gelis: </label>
+                            <input value="{{ request.GET.train_arrive_date }}" class="form-control date-input arrive-date" type="date" name="train_arrive_date" id="arrive-date-2">
                         </div>
                         <div class="col-xl-2 my-2">
                             <label class="form-label" for="passenger_count">Adam Sayi: </label>
-                            <input value="{% if data.p_count%}{{data.p_count}}{% else %}1{% endif %}" min="1" type="number" id="passenger_count" class="form-control" name="p_count">
+                            <input value="{% if request.GET.p_count%}{{request.GET.p_count}}{% else %}1{% endif %}" min="1" type="number" id="passenger_count" class="form-control" name="p_count">
                         </div>
-                        <div class="col-xl-2 my-2 text-center d-flex flex-column justify-content-between">
-                            <div></div>
-                            <div>
-                                <button class="btn btn-primary btn-search w-75" type='submit'>Axtar</button>
-                            </div>
+                        <div class="col-xl-2 my-2 text-center position-relative">
+                            <button class="btn btn-primary btn-search w-75 mt-4" type='submit'>Axtar</button>
                         </div>
                     </div>
                 </div>
@@ -150,6 +144,7 @@
                     {% endif %}
                     <h2>{{ date|date:"d-M-Y" }}</h2>
                     {% for result in results %}
+                        {% if result.seats_remain|floatformat:0 >= request.GET.p_count|floatformat:0 %}
                         <div class="my-5">
                             <div class="custom-card">
                                 <span>
@@ -173,7 +168,7 @@
                                 <div>
                                     <p>Adi: <button
                                         data-type="usual"
-                                        data-count="{{data.p_count}}"
+                                        data-count="{{request.GET.p_count}}"
                                         data-id="{{result.id}}"
                                         data-name="{{result.description}}"
                                         data-departure_time="{{result.departures_at|date:"d/m/Y H:i"}}"
@@ -186,7 +181,7 @@
                                     >{{ result.price|floatformat:2 }} AZN</button></p>
                                     <p>Ekonom: <button
                                         data-type="lowcost"
-                                        data-count="{{data.p_count}}"
+                                        data-count="{{request.GET.p_count}}"
                                         data-id="{{result.id}}"
                                         data-name="{{result.description}}"
                                         data-departure_time="{{result.departures_at|date:"d/m/Y H:i"}}"
@@ -199,7 +194,7 @@
                                     >{{ result.low_cost_price|floatformat:2 }} AZN</button></p>
                                     <p>Biznes: <button
                                         data-type="business"
-                                        data-count="{{data.p_count}}"
+                                        data-count="{{request.GET.p_count}}"
                                         data-id="{{result.id}}"
                                         data-name="{{result.description}}"
                                         data-departure_time="{{result.departures_at|date:"d/m/Y H:i"}}"
@@ -213,12 +208,14 @@
                                 </div>
                             </div>
                         </div>
+                        {% endif %}
                     {% endfor %}
                 {% endfor %}
                 {% elif request.GET|length %}
                 <div class="alert alert-danger" role="alert">Biletlər tapılmadı</div>
                 {% endif %}
             </div>
+            {% if request.GET.oneortwoway == 'two' %}
             <div class="col-md-6">
                 {% if results2 %}
                 {% for date, results in results2 %}
@@ -227,6 +224,7 @@
                     {% endif %}
                     <h2>{{ date|date:"d-M-Y" }}</h2>
                     {% for result in results %}
+                        {% if result.seats_remain|floatformat:0 >= request.GET.p_count|floatformat:0 %}
                         <div class="my-5">
                             <div class="custom-card">
                                 <span>
@@ -250,7 +248,7 @@
                                 <div>
                                     <p>Adi: <button
                                         data-type="usual"
-                                        data-count="{{data.p_count}}"
+                                        data-count="{{request.GET.p_count}}"
                                         data-id="{{result.id}}"
                                         data-name="{{result.description}}"
                                         data-departure_time="{{result.departures_at|date:"d/m/Y H:i"}}"
@@ -263,7 +261,7 @@
                                     >{{ result.price|floatformat:2 }} AZN</button></p>
                                     <p>Ekonom: <button
                                         data-type="lowcost"
-                                        data-count="{{data.p_count}}"
+                                        data-count="{{request.GET.p_count}}"
                                         data-id="{{result.id}}"
                                         data-name="{{result.description}}"
                                         data-departure_time="{{result.departures_at|date:"d/m/Y H:i"}}"
@@ -276,7 +274,7 @@
                                     >{{ result.low_cost_price|floatformat:2 }} AZN</button></p>
                                     <p>Biznes: <button
                                         data-type="business"
-                                        data-count="{{data.p_count}}"
+                                        data-count="{{request.GET.p_count}}"
                                         data-id="{{result.id}}"
                                         data-name="{{result.description}}"
                                         data-departure_time="{{result.departures_at|date:"d/m/Y H:i"}}"
@@ -290,12 +288,14 @@
                                 </div>
                             </div>
                         </div>
+                        {% endif %}
                     {% endfor %}
                 {% endfor %}
                 {% elif request.GET|length %}
                 <div class="alert alert-danger" role="alert">Biletlər tapılmadı</div>
                 {% endif %}
             </div>
+            {% endif %}
         </div>
     </div>
 </div>

@@ -126,5 +126,5 @@ purchaseButton.addEventListener('click', () => {
         if (response.status === 200)
             localStorage.removeItem('tickets');
         return response.json()
-    });
+    })
 });

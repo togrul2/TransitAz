@@ -31,7 +31,7 @@ class Station(models.Model):
     map_y = models.FloatField(null=True, blank=True)
 
     def __str__(self):
-        return f'({self.id}){self.type}: {self.description}'
+        return f'{self.type}: {self.description}'
 
 
 class Transport(models.Model):
@@ -66,7 +66,7 @@ class Transport(models.Model):
         return self.capacity - self.tickets.all().count()
 
     def __str__(self):
-        return f'({self.id}){self.type}: {self.description}'
+        return f'{self.type}: {self.description}'
 
 
 class Ticket(models.Model):

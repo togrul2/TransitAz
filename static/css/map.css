@@ -1,0 +1,25 @@
+.wrapper {
+        height:100vh;
+    }
+
+    .form-wrapper{
+        z-index: 9999;
+        position:absolute;
+        background-color: #fff;
+        border: 1px solid #727272;
+    }
+
+    .form-wrapper form {
+        padding: 20px 100px;
+    }
+
+    .form-wrapper .hide-form {
+        width: 406px;
+        background-color: #dadada;
+        border:none;
+    }
+
+    #map {
+        height: 90vh;
+        width: 100%;
+    }

@@ -12,6 +12,10 @@
     color: #fff;
 }
 
+.added {
+    background-color: #00be00 !important;
+}
+
 .info-part{
     display: flex;
     flex-direction: column;

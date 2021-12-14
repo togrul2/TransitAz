@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block body %}
-<div class="carousel-wrapper">
+<section class="carousel-wrapper">
     <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-indicators">
             <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"
@@ -18,21 +18,21 @@
         </div>
         <div class="carousel-inner">
             <div class="carousel-item active" data-bs-interval="3000">
-                <img src="{% static 'media/images/carousel-img1.jpg' %}" height="500px" class="d-block w-100" alt="...">
+                <img src="{% static 'media/images/carousel-img1.jpg' %}" class="d-block w-100" alt="...">
                 <div class="carousel-caption d-none d-md-block">
                     <h5>First slide label</h5>
                     <p>Some representative placeholder content for the second slide.</p>
                 </div>
             </div>
             <div class="carousel-item" data-bs-interval="3000">
-                <img src="{% static 'media/images/carousel-img2.jpg' %}" height="500px" class="d-block w-100" alt="...">
+                <img src="{% static 'media/images/carousel-img2.jpg' %}" class="d-block w-100" alt="...">
                 <div class="carousel-caption d-none d-md-block">
                     <h5>Second slide label</h5>
                     <p>Some representative placeholder content for the second slide.</p>
                 </div>
             </div>
             <div class="carousel-item" data-bs-interval="3000">
-                <img src="{% static 'media/images/carousel-img2.jpg' %}" height="500px" class="d-block w-100" alt="...">
+                <img src="{% static 'media/images/carousel-img2.jpg' %}"  class="d-block w-100" alt="...">
                 <div class="carousel-caption d-none d-md-block">
                     <h5>Second slide label</h5>
                     <p>Some representative placeholder content for the second slide.</p>
@@ -50,28 +50,28 @@
             <span class="visually-hidden">Next</span>
         </button>
     </div>
-</div>
+</section>
 
-<div class="choice-wrapper ">
+<section class="choice-wrapper mx-lg-5">
     <div class="forms">
         <form action="{% url 'search-tickets' %}" method="get">
             <h1>Bilet elde edin</h1>
             <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                <input type="radio" class="btn-check radio-choice" name="radio_choice" id="radio-bus" value="bus-search"
-                    autocomplete="off" checked>
+                <input {% if request.GET.radio_choice == 'bus-search' %}checked{% endif %} type="radio" class="btn-check radio-choice" name="radio_choice" id="radio-bus"
+                    value="bus-search" autocomplete="off" checked>
                 <label class="btn btn-outline-primary" for="radio-bus">Avtobus</label>
 
-                <input type="radio" class="btn-check radio-choice" name="radio_choice" id="radio-train"
+                <input {% if request.GET.radio_choice == 'train-search' %}checked{% endif %} type="radio" class="btn-check radio-choice" name="radio_choice" id="radio-train"
                     value="train-search" autocomplete="off">
                 <label class="btn btn-outline-primary" for="radio-train">Qatar</label>
             </div>
             <div class="my-4">
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" value='one' name="oneortwoway" id="gedis-tek" checked>
+                    <input {% if request.GET.oneortwoway == 'one' %}checked{% endif %} class="form-check-input" type="radio" value='one' name="oneortwoway" id="gedis-tek" checked>
                     <label class="form-check-label" for="gedis-tek">Gedis ancaq</label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" value='two' name="oneortwoway" id="gedis-gayidis">
+                    <input {% if request.GET.oneortwoway == 'two' %}checked{% endif %} class="form-check-input" type="radio" value='two' name="oneortwoway" id="gedis-gayidis">
                     <label class="form-check-label" for="gedis-gayidis">Gedis ve gayidis</label>
                 </div>
             </div>
@@ -81,14 +81,13 @@
                 </div>
                 <div class="row">
                     <div class="col-xl-2 my-2">
-                        <label class="form-label" for="bus-start">Burdan:</label>
-                        <select id="bus-start" name="bus_start_station" class="form-select"
-                            aria-label="Default select example">
-                            <option selected disabled></option>
+                        <label class="form-label" for="bus-start">Buraya:</label>
+                        <select id="bus-start" name="bus_start_station" class="form-select">
+                            <option {% if not request.GET.bus_start_station %}selected{% endif %} disabled></option>
                             {% for city, stations in bus_destinations.items %}
                             <optgroup label="{{city}}">
                                 {% for station in stations %}
-                                <option value="{{station.id}}">{{station.description}}</option>
+                                <option {% if request.GET.train_arrive_station|floatformat:0 == station.id|floatformat:0 %}selected{% endif %} value="{{station.description}}">{{station.description}}</option>
                                 {% endfor %}
                             </optgroup>
                             {% endfor %}
@@ -98,11 +97,11 @@
                         <label class="form-label" for="bus-arrive">Buraya:</label>
                         <select id="bus-arrive" name="bus_arrive_station" class="form-select"
                             aria-label="Default select example">
-                            <option selected disabled></option>
+                            <option {% if not request.GET.bus_arrive_station %}selected{% endif %} disabled></option>
                             {% for city, stations in bus_destinations.items %}
                             <optgroup label="{{city}}">
                                 {% for station in stations %}
-                                <option value="{{station.id}}">{{station.description}}</option>
+                                <option {% if request.GET.train_arrive_station|floatformat:0 == station.id|floatformat:0 %}selected{% endif %} value="{{station.description}}">{{station.description}}</option>
                                 {% endfor %}
                             </optgroup>
                             {% endfor %}
@@ -110,20 +109,20 @@
                     </div>
                     <div class="col-xl-2 my-2">
                         <label class="form-label" for="start-date-1">Gedis: </label>
-                        <input class="form-control date-input" type="date" name="bus_start_date" id="start-date-1">
+                        <input value="{{ request.GET.bus_start_date }}" class="form-control date-input" type="date" name="bus_start_date" id="start-date-1">
                     </div>
                     <div class="col-xl-2 my-2">
                         <label class="form-label" for="arrive-date-1">Gelis: </label>
-                        <input class="form-control date-input arrive-date" type="date" name="bus_arrive_date" id="arrive-date-1" disabled>
+                        <input value="{{ request.GET.bus_arrive_date }}" class="form-control date-input arrive-date" type="date" name="bus_arrive_date" id="arrive-date-1" disabled>
                     </div>
                     <div class="col-xl-2 my-2">
                         <label class="form-label" for="passenger_count">Adam Sayi: </label>
-                        <input type="number" id="passenger_count" class="form-control w-50">
+                        <input value="{% if request.GET.p_count%}{{request.GET.p_count}}{% else %}1{% endif %}" min="1" type="number" id="passenger_count" class="form-control" name="p_count">
                     </div>
                     <div class="col-xl-2 my-2 text-center d-flex flex-column justify-content-between">
                         <div></div>
                         <div>
-                            <button class="btn btn-primary btn-search w-75">Axtar</button>
+                            <button class="btn btn-primary btn-search w-75" type="submit">Axtar</button>
                         </div>
                     </div>
                 </div>
@@ -135,13 +134,12 @@
                 <div class="row">
                     <div class="col-xl-2 my-2">
                         <label class="form-label" for="train-start">Burdan:</label>
-                        <select id="train-start" name="train_start_station" class="form-select"
-                            aria-label="Default select example">
-                            <option selected disabled></option>
+                        <select id="train-start" name="train_start_station" class="form-select">
+                            <option {% if not request.GET.train_start_station %}selected{% endif %} disabled></option>
                             {% for city, stations in train_destinations.items %}
                             <optgroup label="{{city}}">
                                 {% for station in stations %}
-                                <option value="{{station.id}}">{{station.description}}</option>
+                                <option {% if request.GET.train_start_station|floatformat:0 == station.id|floatformat:0 %}selected{% endif %} value="{{station.description}}">{{station.description}}</option>
                                 {% endfor %}
                             </optgroup>
                             {% endfor %}
@@ -149,13 +147,12 @@
                     </div>
                     <div class="col-xl-2 my-2">
                         <label class="form-label" for="train-arrive">Buraya:</label>
-                        <select id="train-arrive" name="train_arrive_station" class="form-select"
-                            aria-label="Default select example">
-                            <option selected disabled></option>
+                        <select id="train-arrive" name="train_arrive_station" class="form-select">
+                            <option {% if not request.GET.train_arrive_station %}selected{% endif %} disabled></option>
                             {% for city, stations in train_destinations.items %}
                             <optgroup label="{{city}}">
                                 {% for station in stations %}
-                                <option value="{{station.id}}">{{station.description}}</option>
+                                    <option {% if request.GET.train_arrive_station|floatformat:0 == station.id|floatformat:0 %}selected{% endif %} value="{{station.description}}">{{station.description}}</option>
                                 {% endfor %}
                             </optgroup>
                             {% endfor %}
@@ -163,26 +160,94 @@
                     </div>
                     <div class="col-xl-2 my-2">
                         <label class="form-label" for="start-date-2">Gedis: </label>
-                        <input class="form-control date-input" type="date" name="train_start_date" id="start-date-2">
+                        <input value="{{ request.GET.train_start_date }}" class="form-control date-input" type="date" name="train_start_date" id="start-date-2">
                     </div>
                     <div class="col-xl-2 my-2">
-                        <label for="arrive-date-2" class="form-label">Gelis: </label>
-                        <input class="form-control date-input arrive-date" type="date" name="train_arrive_date" id="arrive-date-2" disabled>
+                        <label class="form-label" for="arrive-date-2">Gelis: </label>
+                        <input value="{{ request.GET.train_arrive_date }}" class="form-control date-input arrive-date" type="date" name="train_arrive_date" id="arrive-date-2">
                     </div>
                     <div class="col-xl-2 my-2">
                         <label class="form-label" for="passenger_count">Adam Sayi: </label>
-                        <input type="number" id="passenger_count" class="form-control w-50">
+                        <input value="{% if request.GET.p_count%}{{request.GET.p_count}}{% else %}1{% endif %}" min="1" type="number" id="passenger_count" class="form-control" name="p_count">
                     </div>
                     <div class="col-xl-2 my-2 text-center d-flex flex-column justify-content-between">
                         <div></div>
-                        <button class="btn btn-primary btn-search w-75">Axtar</button>
+                        <div>
+                            <button class="btn btn-primary btn-search w-75" type='submit'>Axtar</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </form>
     </div>
-</div>
+</section>
+<section class="map-card my-5 mx-5">
+    <div class="blog-card">
+        <div class="meta">
+            <div class="photo" style="background-image: url({% static 'media/images/map-img.jpg' %})"></div>
+        </div>
+        <div class="description">
+            <h1>Xəritədə Axtar</h1>
+            <h2></h2>
+            <p>Xəritə üzərində istədiniz stansiyanı seçərək uyğun biletlər axtarın</p>
+            <p class="read-more"><a href="{% url 'map_search' %}">Axtar</a></p>
+        </div>
+    </div>
+    <div class="container my-5">
+        <div class="row">
+            <div class="col-lg-4 my-2">
+                <div class="card card-custom bg-white border-white border-0">
+                    <div class="card-custom-img" style="background-image: url({% static 'media/images/new-year-card-img.webp' %});"></div>
+                        <div class="card-custom-avatar">
+                            <img class="img-fluid" src="{% static 'media/images/percentage-icon.webp' %}" alt="Avatar" />
+                        </div>
+                        <div class="card-body" style="overflow-y: auto">
+                            <h4 class="card-title">Xüsusi təkliflər</h4>
+                            <p class="card-text">Yeni il bayramı münasibəti ilə xüsusi endirimlərimizdən yararlanın</p>
+                        </div>
+                        <div class="card-footer" style="background: inherit; border-color: inherit;">
+                            <a href="#" class="btn btn-sm btn-primary">Ətraflı</a>
+{#                            <a href="#" class="btn btn-sm btn-outline-primary">Other option</a>#}
+                        </div>
+                </div>
+            </div>
+            <div class="col-lg-4 my-2">
+                <div class="card card-custom bg-white border-white border-0">
+                    <div class="card-custom-img" style="background-image: url(http://res.cloudinary.com/d3/image/upload/c_scale,q_auto:good,w_1110/trianglify-v1-cs85g_cc5d2i.jpg);"></div>
+                        <div class="card-custom-avatar">
+                            <img class="img-fluid" src="http://res.cloudinary.com/d3/image/upload/c_pad,g_center,h_200,q_auto:eco,w_200/bootstrap-logo_u3c8dx.jpg" alt="Avatar" />
+                        </div>
+                        <div class="card-body" style="overflow-y: auto">
+                            <h4 class="card-title">Card title</h4>
+                            <p class="card-text">Card has minimum height set but will expand if more space is needed for card body content. You can use Bootstrap <a href="https://getbootstrap.com/docs/4.0/components/card/#card-decks" target="_blank">card-decks</a> to align multiple cards nicely in a row.</p>
+                        </div>
+                        <div class="card-footer" style="background: inherit; border-color: inherit;">
+                            <a href="#" class="btn btn-sm btn-primary my-2">Option</a>
+                            <a href="#" class="btn btn-sm btn-outline-primary">Other option</a>
+                        </div>
+                </div>
+            </div>
+            <div class="col-lg-4 my-2">
+                <div class="card card-custom bg-white border-white border-0">
+{#                    <img class="card-custom-img" src="{% static 'media/images/helpdesk-3.jpg' %}" alt="">#}
+                    <div class="card-custom-img" style="background-image: url({% static 'media/images/helpdesk-3.jpg' %})"></div>
+                        <div class="card-custom-avatar">
+                            <img class="img-fluid" src="{% static 'media/images/help-desk-icon.png' %}" width="100" alt="Avatar"/>
+                        </div>
+                        <div class="card-body" style="overflow-y: auto">
+                            <h4 class="card-title">Biletlərin qaytarılması</h4>
+                            <p class="card-text">Bilet qaytarmaq üçün texniki şöbəyə müraciət edə bilərsiz</p>
+                        </div>
+                        <div class="card-footer" style="background: inherit; border-color: inherit;">
+                            <a href="#" class="btn btn-sm btn-primary my-2">Ətraflı</a>
+                            <a href="#" class="btn btn-sm btn-outline-primary">Müraciət et</a>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
+</section>
 
 <script src="{% static 'js/dashboard.js' %}"></script>
 

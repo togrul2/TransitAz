@@ -16,11 +16,13 @@
 				<li class="nav-item"><a class="nav-link {% if path == 'search-tickets' %}active{% endif %}"
 						href="{% url 'search-tickets' %}">Bilet Axtar</a></li>
                 <li class="nav-item"><a class="nav-link {% if path == 'map_search' %}active{% endif %}"
-                            href="{% url 'map_search' %}">Bilet Axtar</a></li>
-				<li class="nav-item"><a class="nav-link {% if path == 'tickets-cart' %}active{% endif %}"
-						href="{% url 'tickets-cart' %}">Bilel səbəti <span
-							class="badge badge-count-tickets bg-secondary">0</span></a></li>
-
+                            href="{% url 'map_search' %}">Xerite</a></li>
+				<li class="nav-item">
+                    <a class="nav-link {% if path == 'tickets-cart' %}active{% endif %}"
+                       href="{% url 'tickets-cart' %}">Bilel səbəti
+                        <span class="badge badge-count-tickets bg-secondary">0</span>
+                    </a>
+                </li>
 			</ul>
 			<ul class="navbar-nav mb-2 mb-lg-0">
 				{% if request.user.is_authenticated %}
