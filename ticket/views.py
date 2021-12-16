@@ -7,6 +7,9 @@ import json
 
 # Create your views here.
 
+def main(request):
+    return render(request, 'main.html')
+
 
 def dashboard(request):
     cities = City.objects.all()

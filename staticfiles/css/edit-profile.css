@@ -1,0 +1,16 @@
+.c-main {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.messages {
+    margin-top: 20px;
+    list-style: none;
+}
+
+@media(max-width: 350px){
+
+}

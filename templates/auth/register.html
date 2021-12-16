@@ -19,20 +19,20 @@
 
 <body>
     <div class="wrapper">
-        <form class="mt-5 mt-md-0" action="" method="post">
+        <form method="post">
             {% csrf_token %}
             <div class="row header">
                 <h1>
                     <a href="{% url 'main' %}" class="link-primary">Transit Az</a>
                 </h1>
-                <h5>Qeydiyyatdan kec</h5>
+                <h5>Qeydiyyatdan keç</h5>
             </div>
             <div class="my-3 row text-sm-end">
                 <div class="col-md">
                     <div class="form-floating">
                         <input name='username' type="text" class="form-control" id="floatingInputGrid0"
                             placeholder="istifadeci adi">
-                        <label for="floatingInputGrid0">Istifadeci adi</label>
+                        <label for="floatingInputGrid0">Istifadəci adı</label>
                     </div>
                 </div>
             </div>
@@ -57,7 +57,7 @@
                     <div class="form-floating">
                         <input class="form-control" id="email" name="email" type="email" value="{{ data.email }}"
                             placeholder="email@example.co" required>
-                        <label for="email">Email</label>
+                        <label for="email">E-poçt</label>
                     </div>
                 </div>
             </div>
@@ -66,7 +66,7 @@
                     <div class="form-floating">
                         <input class="form-control" id="password1" name="password1" type="password" placeholder="2"
                             required>
-                        <label for="password1">Password</label>
+                        <label for="password1">Şifrə</label>
                     </div>
                 </div>
             </div>
@@ -75,14 +75,29 @@
                     <div class="form-floating">
                         <input class="form-control" id="password2" name="password2" type="password" placeholder="2"
                             required>
-                        <label for="password2">Confirm Password</label>
+                        <label for="password2">Şifrənin təsdiqi</label>
                     </div>
                 </div>
             </div>
             <div class="mb-3 row">
                 <div class="col-md">
+                    {% if messages %}
+                    <div class="alert alert-danger">
+                        <ul class="messages">
+                            {% for message in messages %}
+                            <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>
+                            {{ message }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <div class="col-md">
                     <input class="form-check-input" id="accept-terms" name="accepted" type="checkbox">
-                    <label class="form-check-label" for="accept-terms"><a href="#">Qaydalari</a> oxudum ve qebul etmisem</label>
+                    <label class="form-check-label" for="accept-terms"><a href="#">Qaydaları</a> oxudum və qəbul etdim</label>
                 </div>
             </div>
             <div class="mb-3 row text-sm-center">
@@ -93,12 +108,5 @@
             </div>
         </form>
     </div>
-{% if messages %}
-    <ul class="messages">
-		{% for message in messages %}
-		<li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
-			{% endfor %}
-	</ul>
-{% endif %}
 </body>
 </html>

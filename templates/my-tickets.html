@@ -25,22 +25,23 @@
             <div class="col-lg-7 d-flex flex-column ">
                 {% if tickets %}
                 {% for ticket in tickets %}
-                    {% if ticket.is_usable %}
-                        <div class="custom-card">
+                        <div class="custom-card {% if not ticket.is_usable %}not-usable{% endif %}">
                             <div class="custom-card-header">
                                 <span class="title">
                                 {% if ticket.transport.type == 'Bus' %}
                                     <i class="fas fa-bus"></i>
                                 {% elif ticket.transport.type == 'Train' %}
                                     <i class="fas fa-train"></i>
-                                {% endif %} {{ticket.transport.description}} ({{ticket.type}})</span>
+                                {% endif %} {{ticket.transport.description}} ({{ticket.type}})
+                                {% if not ticket.is_usable %}(Yararsız){% endif %}
+                                </span>
                                 <span class="date float-end">{{ticket.transport.departures_at|date:"d/m/Y"}}</span>
                             </div>
                             <div class="card-about hidden">
                                 <ul>
                                     <li><span>Klass: {{ ticket.type }}</span></li>
-                                    <li><span>Alinma tarixi: {{ ticket.purchased_at|date:"d/m/Y H:i" }}</span></li>
-                                    <li><span>Qiymet:
+                                    <li><span>Alınma tarixi: {{ ticket.purchased_at|date:"d/m/Y H:i" }}</span></li>
+                                    <li><span>Qiymət:
                                         {% if ticket.type == 'usual' %}
                                             {{ ticket.transport.price|floatformat:2 }}
                                         {% elif ticket.type == 'lowcost' %}
@@ -49,44 +50,14 @@
                                             {{ ticket.transport.business_price|floatformat:2 }}
                                         {% endif %}AZN
                                     </span></li>
-                                    <li>Burdan: {{ ticket.transport.starting_point.description }} - {{ ticket.transport.departures_at|date:"H:i" }}</li>
-                                    <li>Buraya: {{ ticket.transport.destination.description }} - {{ ticket.transport.arrives_at|date:"H:i" }}</li>
+                                    <li>Burdan: {{ ticket.transport.starting_point.description }}, saat: {{ ticket.transport.departures_at|date:"H:i" }}</li>
+                                    <li>Buraya: {{ ticket.transport.destination.description }}, saat: {{ ticket.transport.arrives_at|date:"H:i" }}</li>
                                 </ul>
                             </div>
                         </div>
-                    {% else %}
-                        <div class="custom-card not-usable">
-                            <div class="custom-card-header">
-                                <span class="title">
-                                {% if ticket.transport.type == 'Bus' %}
-                                    <i class="fas fa-bus"></i>
-                                {% elif ticket.transport.type == 'Train' %}
-                                    <i class="fas fa-train"></i>
-                                {% endif %} {{ticket.transport.description}} ({{ticket.type}}) (Yararsiz)</span>
-                                <span class="date float-end">{{ticket.transport.departures_at|date:"d/m/Y"}}</span>
-                            </div>
-                            <div class="card-about hidden">
-                                <ul>
-                                    <li><span>Klass: {{ ticket.type }}</span></li>
-                                    <li><span>Alinma tarixi: {{ ticket.purchased_at|date:"d/m/Y H:i" }}</span></li>
-                                    <li><span>Qiymet:
-                                        {% if ticket.type == 'usual' %}
-                                            {{ ticket.transport.price|floatformat:2 }}
-                                        {% elif ticket.type == 'lowcost' %}
-                                            {{ ticket.transport.lowcost_price|floatformat:2 }}
-                                        {% elif ticket.type == 'business' %}
-                                            {{ ticket.transport.business_price|floatformat:2 }}
-                                        {% endif %}AZN
-                                    </span></li>
-                                    <li>Burdan: {{ ticket.transport.starting_point.description }} - {{ ticket.transport.departures_at|date:"H:i" }}</li>
-                                    <li>Buraya: {{ ticket.transport.destination.description }} - {{ ticket.transport.arrives_at|date:"H:i" }}</li>
-                                </ul>
-                            </div>
-                        </div>
-                    {% endif %}
                 {% endfor %}
                 {% else %}
-                    <div class="mt-4 alert alert-danger">Biletler tapilmadi</div>
+                    <div class="mt-4 alert alert-danger">Biletlər tapılmadı</div>
                 {% endif %}
 
 
@@ -95,23 +66,31 @@
                     <ul class="pagination">
                         {% if tickets.has_previous %}
                             <li class="page-item">
-                            <a class="page-link" href="?bus_page={{tickets.number}}&page={{ tickets.previous_page_number }}&filter={{request.GET.filter}}" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                            </a>
+                            <a
+                                class="page-link"
+                                href="?page={{ tickets.previous_page_number }}&filter={{request.GET.filter}}"
+                                aria-label="Previous"
+                            ><span aria-hidden="true">&laquo;</span></a>
                         </li>
                         {% endif %}
                         {% for page in tickets.paginator.page_range %}
                             {% if page == tickets.number %}
-                            <li class="page-item active"><a class="page-link" href="?page={{page}}&filter={{request.GET.filter}}">{{page}}</a></li>
+                            <li class="page-item active">
+                                <a class="page-link" href="?page={{page}}&filter={{request.GET.filter}}">{{page}}</a>
+                            </li>
                             {% else %}
-                            <li class="page-item"><a class="page-link" href="?page={{page}}&filter={{request.GET.filter}}">{{page}}</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{page}}&filter={{request.GET.filter}}">{{page}}</a>
+                            </li>
                             {% endif %}
                         {% endfor %}
                         {% if tickets.has_next %}
                         <li class="page-item">
-                            <a class="page-link" href="?page={{tickets.next_page_number}}&filter={{request.GET.filter}}" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                            </a>
+                            <a
+                                class="page-link"
+                                href="?page={{tickets.next_page_number}}&filter={{request.GET.filter}}"
+                                aria-label="Next"
+                            ><span aria-hidden="true">&raquo;</span></a>
                         </li>
                         {% endif %}
                     </ul>
@@ -121,22 +100,22 @@
             <div class="col-lg-5 d-flex flex-column align-items-center mb-3">
                 <div class="list-count list-group list">
                     <div class="list-group-item">
-                        <h3>Toplam bilet sayi: {{ total }}</h3>
+                        <h3>Toplam bilet sayı: {{ total }}</h3>
                     </div>
                     <div class="list-group-item">
-                        <h3>Toplam movcud bilet sayi: {{ usable_tickets }}</h3>
+                        <h3>Toplam mövcud bilet sayı: {{ usable_tickets }}</h3>
                     </div>
                     <div class="list-group-item">
-                        <h5>Toplam avtobus bilet sayi: {{ bus_total }}</h5>
+                        <h5>Toplam avtobus bilet sayı: {{ bus_total }}</h5>
                     </div>
                     <div class="list-group-item">
-                        <h5>Toplam qatar bilet sayi: {{ train_total }}</h5>
+                        <h5>Toplam qatar bilet sayı: {{ train_total }}</h5>
                     </div>
                     <div class="list-group-item">
-                        <h5>Toplam movcud avtobus bilet sayi: {{ usable_bus_tickets }}</h5>
+                        <h5>Toplam mövcud avtobus bilet sayı: {{ usable_bus_tickets }}</h5>
                     </div>
                     <div class="list-group-item">
-                        <h5>Toplam movcud avtobus bilet sayi: {{ usable_train_tickets }}</h5>
+                        <h5>Toplam mövcud avtobus bilet sayı: {{ usable_train_tickets }}</h5>
                     </div>
                 </div>
             </div>

@@ -1,26 +1,7 @@
 {% extends 'main.html' %}
 {% load static %}
 {% block title %}Change Password{% endblock %}
-{% block head %}
-    <style>
-        .c-main {
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .messages {
-            margin-top: 20px;
-            list-style: none;
-        }
-
-        @media(max-width: 350px){
-
-        }
-    </style>
-{% endblock %}
+{% block head %}<link rel="stylesheet" href="{% static 'css/edit-profile.css' %}">{% endblock %}
 
 {% block body %}
 <div class="container c-main">
@@ -28,43 +9,83 @@
         <a class="btn btn-primary" href="{% url 'my_profile' %}">Go Back</a>
     </div>
     <div class="form-wrapper w-50">
-        <h1>Hesabi yenile</h1>
+        <h1>Hesab məlumatları</h1>
         <form method="post">
             {% csrf_token %}
             <div class="row">
                 <div class="col-12">
-                    <label for="username" class="form-label">Istifadeci adi:</label>
-                    <input value="{{user.username}}" name="username" type="text" class="form-control" id="username" placeholder="Istifadeci adi" required>
+                    <label for="username" class="form-label">Istifadəçi adı:</label>
+                    <input
+                        value="{{user.username}}"
+                        name="username"
+                        type="text"
+                        class="form-control"
+                        id="username"
+                        placeholder="Istifadeci adi"
+                        required
+                    >
                 </div>
             </div>
             <div class="row mt-2">
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label for="first_name" class="form-label">Ad:</label>
-                        <input value="{{user.first_name}}" name="first_name" type="text" class="form-control" id="first_name" placeholder="Ad" required>
+                        <input
+                            value="{{user.first_name}}"
+                            name="first_name"
+                            type="text"
+                            class="form-control"
+                            id="first_name"
+                            placeholder="Ad"
+                            required
+                        >
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label for="last_name" class="form-label">Soyad:</label>
-                        <input value="{{user.last_name}}" name="last_name" type="text" class="form-control" id="last_name" placeholder="Soyad" required>
+                        <input
+                            value="{{user.last_name}}"
+                            name="last_name"
+                            type="text"
+                            class="form-control"
+                            id="last_name"
+                            placeholder="Soyad"
+                            required
+                        >
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-12">
-                    <label for="email" class="form-label">Elektron poct:</label>
-                    <input value="{{user.email}}" name="email" type="email" class="form-control" id="email" placeholder="Elektron poct" required>
+                    <label for="email" class="form-label">Elektron poçt:</label>
+                    <input
+                        value="{{user.email}}"
+                        name="email"
+                        type="email"
+                        class="form-control"
+                        id="email"
+                        placeholder="Elektron poçt"
+                        required
+                    >
                 </div>
             </div>
             <div class="row mt-3">
                 <div class="col-12">
-                    <label for="phone_number" class="form-label">Telefon nomresi:</label>
-                    <input value="{{user.phone_number}}" name="phone_number" type="text" class="form-control" id="phone_number" placeholder="Telefon nomresi" required>
+                    <label for="phone_number" class="form-label">Telefon nömrəsi:</label>
+                    <input
+                        value="{{user.phone_number}}"
+                        name="phone_number"
+                        type="text"
+                        class="form-control"
+                        id="phone_number"
+                        placeholder="Telefon nomresi"
+                        required
+                    >
                 </div>
             </div>
             <div class="mt-2 text-md-end text-center">
-                <button type="submit" class="btn btn-primary">Deyis</button>
+                <button type="submit" class="btn btn-primary">Təstiqlə</button>
             </div>
         </form>
     </div>

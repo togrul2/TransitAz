@@ -10,11 +10,12 @@
 {% block body %}
 
 <div class="wrapper my-3">
-    <h1 class="mx-5">Biletler</h1>
-    <div class="choice-wrapper mx-lg-5">
+    <h1 class="mx-5">Bilet Axtarışı</h1>
+
+    <section class="choice-wrapper mx-lg-5">
         <div class="forms">
             <form action="{% url 'search-tickets' %}" method="get">
-                <h1>Bilet elde edin</h1>
+                <h1>Bilet əldə edin</h1>
                 <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
                     <input {% if request.GET.radio_choice == 'bus-search' %}checked{% endif %} type="radio" class="btn-check radio-choice" name="radio_choice" id="radio-bus"
                         value="bus-search" autocomplete="off" checked>
@@ -27,11 +28,11 @@
                 <div class="my-4">
                     <div class="form-check">
                         <input {% if request.GET.oneortwoway == 'one' %}checked{% endif %} class="form-check-input" type="radio" value='one' name="oneortwoway" id="gedis-tek" checked>
-                        <label class="form-check-label" for="gedis-tek">Gedis ancaq</label>
+                        <label class="form-check-label" for="gedis-tek">Ancaq Gediş</label>
                     </div>
                     <div class="form-check">
                         <input {% if request.GET.oneortwoway == 'two' %}checked{% endif %} class="form-check-input" type="radio" value='two' name="oneortwoway" id="gedis-gayidis">
-                        <label class="form-check-label" for="gedis-gayidis">Gedis ve gayidis</label>
+                        <label class="form-check-label" for="gedis-gayidis">Gediç və gəliş</label>
                     </div>
                 </div>
                 <div class="mt-3 form-wrapper form-bus">
@@ -40,13 +41,13 @@
                     </div>
                     <div class="row">
                         <div class="col-xl-2 my-2">
-                            <label class="form-label" for="bus-start">Buraya:</label>
-                            <select  id="bus-start" name="bus_start_station" class="form-select">
+                            <label class="form-label" for="bus-start">Burdan:</label>
+                            <select id="bus-start" name="bus_start_station" class="form-select">
                                 <option {% if not request.GET.bus_start_station %}selected{% endif %} disabled></option>
                                 {% for city, stations in bus_destinations.items %}
                                 <optgroup label="{{city}}">
                                     {% for station in stations %}
-                                    <option {% if request.GET.bus_start_station == station.description %}selected{% endif %} value="{{station.description}}">{{station.description}}</option>
+                                    <option {% if request.GET.train_arrive_station == station.description %}selected{% endif %} value="{{station.description}}">{{station.description}}</option>
                                     {% endfor %}
                                 </optgroup>
                                 {% endfor %}
@@ -60,26 +61,29 @@
                                 {% for city, stations in bus_destinations.items %}
                                 <optgroup label="{{city}}">
                                     {% for station in stations %}
-                                    <option {% if request.GET.bus_arrive_station == station.description %}selected{% endif %} value="{{station.description}}">{{station.description}}</option>
+                                    <option {% if request.GET.train_arrive_station == station.description %}selected{% endif %} value="{{station.description}}">{{station.description}}</option>
                                     {% endfor %}
                                 </optgroup>
                                 {% endfor %}
                             </select>
                         </div>
                         <div class="col-xl-2 my-2">
-                            <label class="form-label" for="start-date-1">Gedis: </label>
+                            <label class="form-label" for="start-date-1">Gediş tarixi: </label>
                             <input value="{{ request.GET.bus_start_date }}" class="form-control date-input" type="date" name="bus_start_date" id="start-date-1">
                         </div>
                         <div class="col-xl-2 my-2">
-                            <label class="form-label" for="arrive-date-1">Gelis: </label>
+                            <label class="form-label" for="arrive-date-1">Gəliş tarixi: </label>
                             <input value="{{ request.GET.bus_arrive_date }}" class="form-control date-input arrive-date" type="date" name="bus_arrive_date" id="arrive-date-1" disabled>
                         </div>
                         <div class="col-xl-2 my-2">
-                            <label class="form-label" for="passenger_count">Adam Sayi: </label>
+                            <label class="form-label" for="passenger_count">Adam Sayı: </label>
                             <input value="{% if request.GET.p_count%}{{request.GET.p_count}}{% else %}1{% endif %}" min="1" type="number" id="passenger_count" class="form-control" name="p_count">
                         </div>
-                        <div class="col-xl-2 my-2 text-center">
-                            <button class="btn btn-primary btn-search w-75 mt-4" type="submit">Axtar</button>
+                        <div class="col-xl-2 my-2 text-center d-flex flex-column justify-content-between">
+                            <div></div>
+                            <div>
+                                <button class="btn btn-primary btn-search w-75" type="submit">Axtar</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -92,7 +96,7 @@
                             <label class="form-label" for="train-start">Burdan:</label>
                             <select id="train-start" name="train_start_station" class="form-select">
                                 <option {% if not request.GET.train_start_station %}selected{% endif %} disabled></option>
-                                {% for city, stations in train_destinations %}
+                                {% for city, stations in train_destinations.items %}
                                 <optgroup label="{{city}}">
                                     {% for station in stations %}
                                     <option {% if request.GET.train_start_station == station.description %}selected{% endif %} value="{{station.description}}">{{station.description}}</option>
@@ -126,178 +130,185 @@
                             <label class="form-label" for="passenger_count">Adam Sayi: </label>
                             <input value="{% if request.GET.p_count%}{{request.GET.p_count}}{% else %}1{% endif %}" min="1" type="number" id="passenger_count" class="form-control" name="p_count">
                         </div>
-                        <div class="col-xl-2 my-2 text-center position-relative">
-                            <button class="btn btn-primary btn-search w-75 mt-4" type='submit'>Axtar</button>
+                        <div class="col-xl-2 my-2 text-center d-flex flex-column justify-content-between">
+                            <div></div>
+                            <div>
+                                <button class="btn btn-primary btn-search w-75" type='submit'>Axtar</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </form>
         </div>
-    </div>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6">
-                {% if results1 %}
-                {% for date, results in results1 %}
-                    {% if forloop.counter == 1 %}
-                    <h1>{{results.0.starting_point.name}} - {{ results.0.destination.name }}</h1>
-                    {% endif %}
-                    <h2>{{ date|date:"d-M-Y" }}</h2>
-                    {% for result in results %}
-                        {% if result.seats_remain|floatformat:0 >= request.GET.p_count|floatformat:0 %}
-                        <div class="my-5">
-                            <div class="custom-card">
-                                <span>
-                                    <i class="fas fa-train"></i>
-                                    {{ result.departures_at|date:"H:i"}} - {{ result.arrives_at|date:"H:i" }}
-                                </span>
-                                <span><i class="fas fa-user"></i>{{ result.seats_remain }}</span>
-                                <div>
-                                    <button data-id="about_{{result.id}}" class="more-info-btn">{{ result.price|floatformat:2 }} AZN</button>
-                                </div>
-                            </div>
-                            <div id="about_{{result.id}}" class="hidden about-card">
-                                <div class="info-part">
-                                    <span>Start: {{ result.starting_point.description }} - {{ result.departures_at|date:"d/m/Y H:i"}}</span>
-                                    <span>Finish: {{ result.destination.description }} - {{ result.arrives_at|date:"d/m/Y H:i" }}</span>
-                                    <span>Bos yer: {{ result.seats_remain }}</span>
-                                </div>
-                                {% if result.has_seats_for_disabled %}
-                                <i class="fas fa-wheelchair"></i>
-                                {% endif %}
-                                <div>
-                                    <p>Adi: <button
-                                        data-type="usual"
-                                        data-count="{{request.GET.p_count}}"
-                                        data-id="{{result.id}}"
-                                        data-name="{{result.description}}"
-                                        data-departure_time="{{result.departures_at|date:"d/m/Y H:i"}}"
-                                        data-arrive_time="{{result.arrives_at|date:"d/m/Y H:i"}}"
-                                        data-price="{{result.price|floatformat:2}}"
-                                        data-transport="{{result.type}}"
-                                        data-seats="{{result.available_tickets}}"
-                                        data-total_seats="{{result.capacity}}"
-                                        class="add-btn"
-                                    >{{ result.price|floatformat:2 }} AZN</button></p>
-                                    <p>Ekonom: <button
-                                        data-type="lowcost"
-                                        data-count="{{request.GET.p_count}}"
-                                        data-id="{{result.id}}"
-                                        data-name="{{result.description}}"
-                                        data-departure_time="{{result.departures_at|date:"d/m/Y H:i"}}"
-                                        data-arrive_time="{{result.arrives_at|date:"d/m/Y H:i"}}"
-                                        data-price="{{result.low_cost_price|floatformat:2}}"
-                                        data-transport="{{result.type}}"
-                                        data-seats="{{result.available_tickets}}"
-                                        data-total_seats="{{result.capacity}}"
-                                        class="add-btn"
-                                    >{{ result.low_cost_price|floatformat:2 }} AZN</button></p>
-                                    <p>Biznes: <button
-                                        data-type="business"
-                                        data-count="{{request.GET.p_count}}"
-                                        data-id="{{result.id}}"
-                                        data-name="{{result.description}}"
-                                        data-departure_time="{{result.departures_at|date:"d/m/Y H:i"}}"
-                                        data-arrive_time="{{result.arrives_at|date:"d/m/Y H:i"}}"
-                                        data-price="{{result.business_price|floatformat:2}}"
-                                        data-transport="{{result.type}}"
-                                        data-seats="{{result.available_tickets}}"
-                                        data-total_seats="{{result.capacity}}"
-                                        class="add-btn"
-                                    >{{ result.business_price|floatformat:2 }} AZN</button></p>
-                                </div>
-                            </div>
-                        </div>
+    </section>
+
+    <section class="results">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    {% if results1 %}
+                    {% for date, results in results1 %}
+                        {% if forloop.counter == 1 %}
+                        <h1>{{results.0.starting_point.name}} - {{ results.0.destination.name }}</h1>
                         {% endif %}
+                        <h2>{{ date|date:"d-M-Y" }}</h2>
+                        {% for result in results %}
+                            {% if result.seats_remain|floatformat:0 >= request.GET.p_count|floatformat:0 %}
+                            <div class="my-5">
+                                <div class="custom-card">
+                                    <span>
+                                        <i class="fas fa-train"></i>
+                                        {{ result.departures_at|date:"H:i"}} - {{ result.arrives_at|date:"H:i" }}
+                                    </span>
+                                    <span><i class="fas fa-user"></i>{{ result.seats_remain }}</span>
+                                    <div>
+                                        <button data-id="about_{{result.id}}" class="more-info-btn">{{ result.price|floatformat:2 }} AZN</button>
+                                    </div>
+                                </div>
+                                <div id="about_{{result.id}}" class="hidden about-card">
+                                    <div class="info-part">
+                                        <span>Start: {{ result.starting_point.description }} - {{ result.departures_at|date:"d/m/Y H:i"}}</span>
+                                        <span>Finish: {{ result.destination.description }} - {{ result.arrives_at|date:"d/m/Y H:i" }}</span>
+                                        <span>Bos yer: {{ result.seats_remain }}</span>
+                                    </div>
+                                    {% if result.has_seats_for_disabled %}
+                                    <i class="fas fa-wheelchair"></i>
+                                    {% endif %}
+                                    <div>
+                                        <p>Adi: <button
+                                            data-type="usual"
+                                            data-count="{{request.GET.p_count}}"
+                                            data-id="{{result.id}}"
+                                            data-name="{{result.description}}"
+                                            data-departure_time="{{result.departures_at|date:"d/m/Y H:i"}}"
+                                            data-arrive_time="{{result.arrives_at|date:"d/m/Y H:i"}}"
+                                            data-price="{{result.price|floatformat:2}}"
+                                            data-transport="{{result.type}}"
+                                            data-seats="{{result.available_tickets}}"
+                                            data-total_seats="{{result.capacity}}"
+                                            class="add-btn"
+                                        >{{ result.price|floatformat:2 }} AZN</button></p>
+                                        <p>Ekonom: <button
+                                            data-type="lowcost"
+                                            data-count="{{request.GET.p_count}}"
+                                            data-id="{{result.id}}"
+                                            data-name="{{result.description}}"
+                                            data-departure_time="{{result.departures_at|date:"d/m/Y H:i"}}"
+                                            data-arrive_time="{{result.arrives_at|date:"d/m/Y H:i"}}"
+                                            data-price="{{result.low_cost_price|floatformat:2}}"
+                                            data-transport="{{result.type}}"
+                                            data-seats="{{result.available_tickets}}"
+                                            data-total_seats="{{result.capacity}}"
+                                            class="add-btn"
+                                        >{{ result.low_cost_price|floatformat:2 }} AZN</button></p>
+                                        <p>Biznes: <button
+                                            data-type="business"
+                                            data-count="{{request.GET.p_count}}"
+                                            data-id="{{result.id}}"
+                                            data-name="{{result.description}}"
+                                            data-departure_time="{{result.departures_at|date:"d/m/Y H:i"}}"
+                                            data-arrive_time="{{result.arrives_at|date:"d/m/Y H:i"}}"
+                                            data-price="{{result.business_price|floatformat:2}}"
+                                            data-transport="{{result.type}}"
+                                            data-seats="{{result.available_tickets}}"
+                                            data-total_seats="{{result.capacity}}"
+                                            class="add-btn"
+                                        >{{ result.business_price|floatformat:2 }} AZN</button></p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        {% endfor %}
                     {% endfor %}
-                {% endfor %}
-                {% elif request.GET|length %}
-                <div class="alert alert-danger" role="alert">Biletlər tapılmadı</div>
+                    {% elif request.GET|length %}
+                    <div class="alert alert-danger" role="alert">Biletlər tapılmadı</div>
+                    {% endif %}
+                </div>
+                {% if request.GET.oneortwoway == 'two' %}
+                <div class="col-md-6">
+                    {% if results2 %}
+                    {% for date, results in results2 %}
+                        {% if forloop.counter == 1 %}
+                        <h1>{{results.0.starting_point.name}} - {{ results.0.destination.name }}</h1>
+                        {% endif %}
+                        <h2>{{ date|date:"d-M-Y" }}</h2>
+                        {% for result in results %}
+                            {% if result.seats_remain|floatformat:0 >= request.GET.p_count|floatformat:0 %}
+                            <div class="my-5">
+                                <div class="custom-card">
+                                    <span>
+                                        <i class="fas fa-train"></i>
+                                        {{ result.departures_at|date:"H:i"}} - {{ result.arrives_at|date:"H:i" }}
+                                    </span>
+                                    <span><i class="fas fa-user"></i>{{ result.seats_remain }}</span>
+                                    <div>
+                                        <button data-id="about_{{result.id}}" class="more-info-btn">{{ result.price|floatformat:2 }} AZN</button>
+                                    </div>
+                                </div>
+                                <div id="about_{{result.id}}" class="hidden about-card">
+                                    <div class="info-part">
+                                        <span>Start: {{ result.starting_point.description }} - {{ result.departures_at|date:"d/m/Y H:i"}}</span>
+                                        <span>Finish: {{ result.destination.description }} - {{ result.arrives_at|date:"d/m/Y H:i" }}</span>
+                                        <span>Bos yer: {{ result.seats_remain }}</span>
+                                    </div>
+                                    {% if result.has_seats_for_disabled %}
+                                    <i class="fas fa-wheelchair"></i>
+                                    {% endif %}
+                                    <div>
+                                        <p>Adi: <button
+                                            data-type="usual"
+                                            data-count="{{request.GET.p_count}}"
+                                            data-id="{{result.id}}"
+                                            data-name="{{result.description}}"
+                                            data-departure_time="{{result.departures_at|date:"d/m/Y H:i"}}"
+                                            data-arrive_time="{{result.arrives_at|date:"d/m/Y H:i"}}"
+                                            data-price="{{result.price|floatformat:2 }}"
+                                            data-transport="{{result.type}}"
+                                            data-seats="{{result.available_tickets}}"
+                                            data-total_seats="{{result.capacity}}"
+                                            class="add-btn"
+                                        >{{ result.price|floatformat:2 }} AZN</button></p>
+                                        <p>Ekonom: <button
+                                            data-type="lowcost"
+                                            data-count="{{request.GET.p_count}}"
+                                            data-id="{{result.id}}"
+                                            data-name="{{result.description}}"
+                                            data-departure_time="{{result.departures_at|date:"d/m/Y H:i"}}"
+                                            data-arrive_time="{{result.arrives_at|date:"d/m/Y H:i"}}"
+                                            data-price="{{result.low_cost_price|floatformat:2}}"
+                                            data-transport="{{result.type}}"
+                                            data-seats="{{result.available_tickets}}"
+                                            data-total_seats="{{result.capacity}}"
+                                            class="add-btn"
+                                        >{{ result.low_cost_price|floatformat:2 }} AZN</button></p>
+                                        <p>Biznes: <button
+                                            data-type="business"
+                                            data-count="{{request.GET.p_count}}"
+                                            data-id="{{result.id}}"
+                                            data-name="{{result.description}}"
+                                            data-departure_time="{{result.departures_at|date:"d/m/Y H:i"}}"
+                                            data-arrive_time="{{result.arrives_at|date:"d/m/Y H:i"}}"
+                                            data-price="{{result.business_price|floatformat:2}}"
+                                            data-transport="{{result.type}}"
+                                            data-seats="{{result.available_tickets}}"
+                                            data-total_seats="{{result.capacity}}"
+                                            class="add-btn"
+                                        >{{ result.business_price|floatformat:2 }} AZN</button></p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+                    {% elif request.GET|length %}
+                    <div class="alert alert-danger" role="alert">Biletlər tapılmadı</div>
+                    {% endif %}
+                </div>
                 {% endif %}
             </div>
-            {% if request.GET.oneortwoway == 'two' %}
-            <div class="col-md-6">
-                {% if results2 %}
-                {% for date, results in results2 %}
-                    {% if forloop.counter == 1 %}
-                    <h1>{{results.0.starting_point.name}} - {{ results.0.destination.name }}</h1>
-                    {% endif %}
-                    <h2>{{ date|date:"d-M-Y" }}</h2>
-                    {% for result in results %}
-                        {% if result.seats_remain|floatformat:0 >= request.GET.p_count|floatformat:0 %}
-                        <div class="my-5">
-                            <div class="custom-card">
-                                <span>
-                                    <i class="fas fa-train"></i>
-                                    {{ result.departures_at|date:"H:i"}} - {{ result.arrives_at|date:"H:i" }}
-                                </span>
-                                <span><i class="fas fa-user"></i>{{ result.seats_remain }}</span>
-                                <div>
-                                    <button data-id="about_{{result.id}}" class="more-info-btn">{{ result.price|floatformat:2 }} AZN</button>
-                                </div>
-                            </div>
-                            <div id="about_{{result.id}}" class="hidden about-card">
-                                <div class="info-part">
-                                    <span>Start: {{ result.starting_point.description }} - {{ result.departures_at|date:"d/m/Y H:i"}}</span>
-                                    <span>Finish: {{ result.destination.description }} - {{ result.arrives_at|date:"d/m/Y H:i" }}</span>
-                                    <span>Bos yer: {{ result.seats_remain }}</span>
-                                </div>
-                                {% if result.has_seats_for_disabled %}
-                                <i class="fas fa-wheelchair"></i>
-                                {% endif %}
-                                <div>
-                                    <p>Adi: <button
-                                        data-type="usual"
-                                        data-count="{{request.GET.p_count}}"
-                                        data-id="{{result.id}}"
-                                        data-name="{{result.description}}"
-                                        data-departure_time="{{result.departures_at|date:"d/m/Y H:i"}}"
-                                        data-arrive_time="{{result.arrives_at|date:"d/m/Y H:i"}}"
-                                        data-price="{{result.price|floatformat:2 }}"
-                                        data-transport="{{result.type}}"
-                                        data-seats="{{result.available_tickets}}"
-                                        data-total_seats="{{result.capacity}}"
-                                        class="add-btn"
-                                    >{{ result.price|floatformat:2 }} AZN</button></p>
-                                    <p>Ekonom: <button
-                                        data-type="lowcost"
-                                        data-count="{{request.GET.p_count}}"
-                                        data-id="{{result.id}}"
-                                        data-name="{{result.description}}"
-                                        data-departure_time="{{result.departures_at|date:"d/m/Y H:i"}}"
-                                        data-arrive_time="{{result.arrives_at|date:"d/m/Y H:i"}}"
-                                        data-price="{{result.low_cost_price|floatformat:2}}"
-                                        data-transport="{{result.type}}"
-                                        data-seats="{{result.available_tickets}}"
-                                        data-total_seats="{{result.capacity}}"
-                                        class="add-btn"
-                                    >{{ result.low_cost_price|floatformat:2 }} AZN</button></p>
-                                    <p>Biznes: <button
-                                        data-type="business"
-                                        data-count="{{request.GET.p_count}}"
-                                        data-id="{{result.id}}"
-                                        data-name="{{result.description}}"
-                                        data-departure_time="{{result.departures_at|date:"d/m/Y H:i"}}"
-                                        data-arrive_time="{{result.arrives_at|date:"d/m/Y H:i"}}"
-                                        data-price="{{result.business_price|floatformat:2}}"
-                                        data-transport="{{result.type}}"
-                                        data-seats="{{result.available_tickets}}"
-                                        data-total_seats="{{result.capacity}}"
-                                        class="add-btn"
-                                    >{{ result.business_price|floatformat:2 }} AZN</button></p>
-                                </div>
-                            </div>
-                        </div>
-                        {% endif %}
-                    {% endfor %}
-                {% endfor %}
-                {% elif request.GET|length %}
-                <div class="alert alert-danger" role="alert">Biletlər tapılmadı</div>
-                {% endif %}
-            </div>
-            {% endif %}
         </div>
-    </div>
+    </section>
+
 </div>
 
 <script src="{% static 'js/dashboard.js' %}"></script>

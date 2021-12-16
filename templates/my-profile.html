@@ -12,17 +12,17 @@
         <div class="col-md-6 text-center first-col">
             <div class="profile-container">
                 <h1>{{ request.user.first_name }} {{ request.user.last_name }}</h1>
-                <h5>{{ request.user.username }}</h5>
-                <h6>Elektron poct: {{ request.user.email }}</h6>
+                <h5>@{{ request.user.username }}</h5>
+                <h6>Elektron poçt: {{ request.user.email }}</h6>
                 {% if request.user.phone_number %}
-                <h6>Elaqe nomresi: {{ request.user.phone_number }}</h6>
+                <h6>Elaqə nömrəsi: {{ request.user.phone_number }}</h6>
                 {% else %}
-                <button id='add-phone' class="btn link-primary">Add a phone number</button>
+                <button id='add-phone' class="btn link-primary">Telefon nömrəsi əlavə edin</button>
                 <form method="POST" action="{% url 'add_phone' %}" name="add_phone" class="hidden">
                 {% csrf_token %}
                     <div class="row">
                         <div class="col-3 text-end">
-                            <label for="phone-number" class="col-form-label">Nomre: </label>
+                            <label for="phone-number" class="col-form-label">Nömrə: </label>
                         </div>
                         <div class="col-7">
                             <div class="input-group">
@@ -41,8 +41,8 @@
         <div class="col-md-6 profile-menu d-flex justify-content-center">
             <div class="d-flex flex-column justify-content-evenly">
                 <ul>
-                    <li><a href="{% url 'edit_profile' %}" class="btn btn-outline-primary">Edit profile</a></li>
-                    <li><a href="{% url 'change_password' %}" class="btn btn-outline-primary">Change password</a></li>
+                    <li><a href="{% url 'edit_profile' %}" class="btn btn-outline-primary">Hesab məlumatların dəyis</a></li>
+                    <li><a href="{% url 'change_password' %}" class="btn btn-outline-primary">Sifrəni dəyiş</a></li>
                 </ul>
             </div>
 

@@ -93,7 +93,7 @@ def registerUser(request):
         try:
             validate_password(password1)
         except ValidationError as VeMessage:
-            messages.error(request, VeMessage)
+            messages.error(request, *VeMessage)
 
         if password1 != password2:
             messages.error(request, 'Şifrələr eyni deyillər')
@@ -105,11 +105,11 @@ def registerUser(request):
 
         if User.objects.filter(username=username).exists():
             messages.error(request, 'İstifadəçi adı artıq islənir, başqasını seçin')
-            return render(request, 'auth/register.html', context={'data': context})
+            return render(request, 'auth/register.html', context={'data': request.POST})
 
         if User.objects.filter(email=email).exists():
             messages.error(request, 'Email adresi artıq islənir, başqasını seçin')
-            return render(request, 'auth/register.html', context={'data': context})
+            return render(request, 'auth/register.html', context={'data': request.POST})
 
         if agreed != 'on':
             messages.error(request, 'Qaydaları qəbul etməniz lazım')
@@ -135,10 +135,6 @@ def logoutUser(request):
         path = 'main'
     logout(request)
     return redirect(path)
-
-
-def main(request):
-    return render(request, 'main.html')
 
 
 def activation_request(request):
