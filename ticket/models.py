@@ -46,20 +46,25 @@ class Transport(models.Model):
     destination = models.ForeignKey(Station, on_delete=models.CASCADE, related_name='arrive')
     capacity = models.IntegerField()
     units = models.IntegerField(default=1)
+
     price = models.FloatField(default=1)
     low_cost_price = models.FloatField(default=1)
     business_price = models.FloatField(default=1)
+    discount = models.FloatField(default=0)
+
     departures_at = models.DateTimeField(null=True, blank=True)
     arrives_at = models.DateTimeField(null=True, blank=True)
+
     has_seats_for_disabled = models.BooleanField(default=False)
+    has_wifi = models.BooleanField(default=False)
+    has_sockets = models.BooleanField(default=False)
+    has_air_conditioning = models.BooleanField(default=False)
+    has_multimedia = models.BooleanField(default=False)
+    has_free_snacks = models.BooleanField(default=False)
 
     @property
     def available_tickets(self):
-        lst = []
-        for i in range(1, self.capacity + 1):
-            if not self.tickets.filter(seat=i).exists():
-                lst.append(i)
-        return lst
+        return [seat for seat in range(1, self.capacity + 1) if not self.tickets.filter(seat=seat).exists()]
 
     @property
     def seats_remain(self):
@@ -74,12 +79,12 @@ class Ticket(models.Model):
         ordering = '-purchased_at',
 
     ticket_types = (
-        ('Usual', 'Usual'),
-        ('Lowcost', 'Lowcost'),
-        ('Business', 'Business'),
+        ('Standart', 'Standart'),
+        ('Ekonom', 'Ekonom'),
+        ('Biznes', 'Biznes'),
     )
 
-    type = models.CharField(max_length=100, choices=ticket_types, default='Usual')
+    type = models.CharField(max_length=100, choices=ticket_types, default='Standart')
     transport = models.ForeignKey(Transport, null=True, on_delete=models.SET_NULL, related_name='tickets')
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tickets')
     seat = models.IntegerField(default=1)

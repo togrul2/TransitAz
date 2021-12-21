@@ -44,6 +44,8 @@ urlpatterns = [
          name='password_reset_complete'),
     # Ticket views
     path('dashboard/', ticket_views.dashboard, name='dashboard'),
+    path('about_us/', ticket_views.about_us, name='about_us'),
+    path('rules/', ticket_views.rules, name='rules'),
     path('ticket/', include('ticket.urls')),
     # User views
     path('user/', include('user.urls')),

@@ -108,11 +108,11 @@ def registerUser(request):
             return render(request, 'auth/register.html', context={'data': request.POST})
 
         if User.objects.filter(email=email).exists():
-            messages.error(request, 'Email adresi artıq islənir, başqasını seçin')
+            messages.error(request, 'Email adresi artıq işlənir, başqasını seçin')
             return render(request, 'auth/register.html', context={'data': request.POST})
 
         if agreed != 'on':
-            messages.error(request, 'Qaydaları qəbul etməniz lazım')
+            messages.error(request, 'Qaydaları qəbul etməlisiniz')
         if has_error:
             return render(request, 'auth/register.html', context={'data': request.POST})
 
@@ -122,7 +122,7 @@ def registerUser(request):
 
         if not has_error:
             send_activation_email(request, user)
-            messages.success(request, 'We sent you an email to verify your account')
+            messages.success(request, 'Təsdiq məktubu e-poçtunuza göndərildi')
             return redirect('activation_request')
 
     return render(request, template_name='auth/register.html')
@@ -151,7 +151,7 @@ def activate_user(request, uidb64, token):
     if user and generate_token.check_token(user, token):
         user.is_verified = True
         user.save()
-        messages.success(request, 'Email is verified')
+        messages.success(request, 'Təbriklər! Hesab təsdiqləndi')
         return render(request, 'auth/activation_success.html')
     return render(request, 'auth/activate_failed.html', context={'user': user})
 
@@ -187,7 +187,7 @@ def change_password(request):
         has_authenticated = authenticate(request, username=user, password=old_password)
 
         if has_authenticated is None:
-            messages.error(request, 'Movcud sifre yanlisdir')
+            messages.error(request, 'Mövcud şifrə yanlışdır')
             return render(request, 'auth/change-password.html', status=401)
 
         try:
@@ -197,15 +197,15 @@ def change_password(request):
             return render(request, 'auth/change-password.html', status=400)
 
         if password1 != password2:
-            messages.error(request, "Sifreler uygun deyil")
+            messages.error(request, "Şifrələr eyni deyil")
             return render(request, 'auth/change-password.html', status=400)
 
         profile = User.objects.get(username=user)
         profile.set_password(password1)
         profile.save()
-        messages.success(request, 'Sifreniz ugurla deyisildi')
+        messages.success(request, 'Şifrəniz uğurla dəyişildi')
         return redirect('my-profile')
-    return render(request, 'auth/change-password.html', context={})
+    return render(request, 'auth/change-password.html')
 
 
 def edit_profile(request):
@@ -213,7 +213,7 @@ def edit_profile(request):
     if request.method == "POST":
         username = request.POST.get('username')
         if not username[0].isalpha() or len(username) < 4:
-            messages.error(request, 'Istifadeci adi yararli deyil')
+            messages.error(request, 'Istifadəçi adı yararlı deyil')
             return render(request, 'edit_profile.html', context={'user': user}, status=400)
 
         user.username = username

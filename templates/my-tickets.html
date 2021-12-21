@@ -52,6 +52,7 @@
                                     </span></li>
                                     <li>Burdan: {{ ticket.transport.starting_point.description }}, saat: {{ ticket.transport.departures_at|date:"H:i" }}</li>
                                     <li>Buraya: {{ ticket.transport.destination.description }}, saat: {{ ticket.transport.arrives_at|date:"H:i" }}</li>
+                                    <li>Oturacaq: {{ ticket.seat }}</li>
                                 </ul>
                             </div>
                         </div>

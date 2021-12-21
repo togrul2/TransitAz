@@ -5,7 +5,13 @@ if(data)
 for(let i = 0; i < data.length; i++) {
     const t1 = new Date(0,0,0, data[i].departure_time.substr(11, 2), data[i].departure_time.substr(14, 2))
     const t2 = new Date(0,0,0, data[i].arrive_time.substr(11, 2), data[i].arrive_time.substr(14, 2))
-    let result = t2.getTime() - t1.getTime();
+    const result = t2.getTime() - t1.getTime();
+    function msToTime(s) {
+        // Pad to 2 or 3 digits, default is 2
+        const pad = (n, z = 2) => ('00' + n).slice(-z);
+        return pad(s/3.6e6|0) + ':' + pad((s%3.6e6)/6e4 | 0);
+    }
+
     let seat_btns_txt = "";
     for (let j = 1;j <= Number(data[i].total_seats); j++) {
         if (JSON.parse(data[i].seats).includes(j)) {
@@ -31,7 +37,7 @@ for(let i = 0; i < data.length; i++) {
             </h2>
             <div id="flush-collapse-${data[i].id}" class="accordion-collapse collapse" aria-labelledby="flush-heading-${data[i].id}" data-bs-parent="#tickets_accordion">
                 <div class="accordion-body">
-                    <p>${data[i].name}: ${data[i].departure_time.substr(0, 10)} ${data[i].departure_time.substr(11,5)} - ${data[i].arrive_time.substr(11,5)}</p>
+                    <p>${data[i].name}: ${data[i].departure_time.substr(0, 10)} ${data[i].departure_time.substr(11,5)} - ${data[i].arrive_time.substr(11,5)} (${msToTime(result)})</p>
                     <p>Kategoriya: ${data[i].type}</p>
                     <p>Qiymet: <span class="prices">${data[i].price}</span> AZN</p>
                     <p>Yerlər: </p> 
@@ -71,7 +77,6 @@ function updateValues(){
     const ps = document.querySelectorAll('.info_p');
     const [...prices] = document.getElementsByClassName('prices');
     const [...counts] = document.getElementsByClassName('counts');
-    console.log(counts)
     let total = 0, count = 0;
     for(let i = 0; i < prices.length; i++){
         total += Number(prices[i].textContent);
@@ -82,6 +87,7 @@ function updateValues(){
 }
 
 updateValues();
+hidePurchaseButton();
 
 const [...deleteBtns] = document.getElementsByClassName('delete-btn');
 
@@ -101,9 +107,10 @@ function hidePurchaseButton(){
         pay_group_item.classList.add('hidden');
     }
 }
-//
-hidePurchaseButton();
 
+
+const ok_btn = document.querySelector('.ok-btn');
+ok_btn.addEventListener('click', ()=>{location.reload()});
 
 const purchaseButton = document.querySelector('.pay-btn');
 purchaseButton.addEventListener('click', () => {
@@ -113,7 +120,7 @@ purchaseButton.addEventListener('click', () => {
             'Content-Type': 'application/json',
             'X-CSRFToken': csrftoken,
         },
-        body: JSON.stringify(localStorage.getItem('tickets'))
+        body: localStorage.getItem('tickets')
     })
     .then(response => {
         console.log(response.status)
@@ -121,4 +128,13 @@ purchaseButton.addEventListener('click', () => {
             localStorage.removeItem('tickets');
         return response.json()
     })
+    .then(data=>{
+        const modal_textbox = document.querySelector('.modal-body');
+        console.log(modal_textbox);
+        modal_textbox.textContent = data;
+    })
+    .catch(err=>{
+        const modal_textbox = document.querySelector('.modal-body');
+        modal_textbox.textContent = err;
+    });
 });

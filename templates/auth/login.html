@@ -45,9 +45,9 @@
                 <div class="col-md">
                 {% if messages %}
                     <div class="alert alert-danger">
-                    <ul class="messages">
+                    <ul class="messages list-unstyled">
                         {% for message in messages %}
-                        <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+                        <li{% if message.tags %} class="my-1 {{ message.tags }}" {% endif %}>{{ message }}</li>
                         {% endfor %}
                     </ul>
                     </div>

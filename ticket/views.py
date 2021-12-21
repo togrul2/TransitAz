@@ -8,6 +8,7 @@ import json
 # Create your views here.
 
 def main(request):
+    # transports = Transport.objects.all()
     return render(request, 'main.html')
 
 
@@ -92,24 +93,20 @@ def tickets_cart(request):
 
 
 def proceedPayment(request):
-    data = json.loads(json.loads(request.body))
+    data = json.loads(request.body)
     if request.user.is_authenticated:
         for item in data:
             for seat in item['seats_selected']:
                 transport = Transport.objects.get(id=item['id'])
-                ticket = Ticket(owner=request.user, transport=transport, is_purchased=True, seat=seat,
-                                type=item['type'])
-                ticket.save()
+                if Ticket.objects.filter(transport=transport, seat=seat).exists():
+                    pass
+                else:
+                    ticket = Ticket(owner=request.user, transport=transport, is_purchased=True, seat=seat,
+                                    type=item['type'])
+                    ticket.save()
     else:
         return JsonResponse("Sign in for making purchase", safe=False, status=403)
     return JsonResponse("Purchase successful", safe=False, status=200)
-
-
-def paymentDone(request):
-    if request.user.is_authenticated:
-        return render(request, 'payment-result.html', context={'path': 'tickets-cart', 'success': True})
-    else:
-        return render(request, 'payment-result.html', context={'path': 'tickets-cart', 'success': False})
 
 
 def myTickets(request):
@@ -159,3 +156,11 @@ def map_search(request):
     return render(request, 'map.html', context={'path': 'map_search',
                                                 'train_stations': train_stations,
                                                 'bus_stations': bus_stations})
+
+
+def about_us(request):
+    return render(request, 'about_us.html')
+
+
+def rules(request):
+    return render(request, 'rules.html')

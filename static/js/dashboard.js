@@ -68,42 +68,6 @@ addBtns.forEach(btn => {
                 data.push(item);
         }
         localStorage.setItem('tickets', JSON.stringify(data));
-
         updateCountBadge();
     });
 });
-
-// [...addButtons] = document.getElementsByClassName('add-button');
-//
-// addButtons.forEach(addButton => {
-//     addButton.addEventListener('click', () => {
-//         data = JSON.parse(localStorage.getItem("tickets"));
-//
-//         const item = {
-//             id: data ? data.length: 0,
-//             back_id: addButton.dataset.item_id,
-//             type:addButton.dataset.item_type,
-//             name: addButton.dataset.item_name,
-//             price: addButton.dataset.item_price,
-//             starting_point: addButton.dataset.item_starting_point,
-//             destination: addButton.dataset.item_destination,
-//             departures_at : addButton.dataset.item_departures_at ,
-//             arrives_at: addButton.dataset.item_arrives_at,
-//             seats_remain: addButton.dataset.item_seats_remain,
-//             count:1,
-//         };
-//
-//
-//         let tickets;
-//         if(data != null){
-//             tickets = [...data]
-//             if(data.filter(e => e.id === item.id && e.type === item.type).length === 0)
-//                 tickets.push(item);
-//         }
-//         else
-//             tickets = [item];
-//
-//         localStorage.setItem("tickets", JSON.stringify(tickets));
-//         updateCountBadge();
-//     });
-// });

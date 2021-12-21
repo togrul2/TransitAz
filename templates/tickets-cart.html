@@ -2,38 +2,52 @@
 {% load static %}
 
 {% block title %}Biletler{% endblock %}
+
 {% block head %}
 <style>
     .hidden {
         display: none;
     }
-
-    ..hiddenRow {
-    padding: 0 !important;
-}
 </style>
 {% endblock %}
+
 {% block body %}
 <div class="container my-5">
-    <h1>Biletler</h1>
+    <h1>Biletlər səbəti</h1>
     <div class="row">
         <div class="col-lg-8">
-            <div class="accordion " id="tickets_accordion">
-
-            </div>
+            <div class="accordion" id="tickets_accordion"></div>
         </div>
         <div class="col-lg-4 my-4 my-lg-0">
             <div class="list-group list">
                 <div class="list-group-item">
-                    <h2>Odemeye kec</h2>
+                    <h2>Ödəniş</h2>
                 </div>
                 <div class="list-group-item">
-                    <p class="info_p">Toplam mebleg: 32</p>
-                    <p class="info_p">Bilet sayi: 5</p>
+                    <p class="info_p price_p">Toplam məbləğ: </p>
+                    <p class="info_p quantity_p">Bilet sayı: </p>
                 </div>
             </div>
             <div class="list-group-item pay-group-item">
-                <a href="{% url 'payment-done' %}" class="btn btn-primary d-block pay-btn">Go to payment</a>
+                <!-- Trigger button -->
+                <button type="button" class="btn btn-primary pay-btn w-100" data-bs-toggle="modal" data-bs-target="#result-modal">
+                    Ödəməyə keç
+                </button>
+                <!-- Modal -->
+                <div class="modal fade" id="result-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body"></div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary ok-btn" data-bs-dismiss="modal">OK</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
