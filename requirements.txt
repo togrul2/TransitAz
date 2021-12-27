@@ -1,5 +1,6 @@
-Django~=3.2.9
-six~=1.16.0
-python-dotenv~=0.19.1
-tzlocal~=4.1
-mysqlclient~=2.0.3
+Django==3.2.9
+six==1.16.0
+python-dotenv==0.19.1
+tzlocal==4.1
+mysqlclient==2.0.3
+validate-email==1.3

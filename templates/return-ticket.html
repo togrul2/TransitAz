@@ -1,0 +1,81 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block title %}Bilet qaytar{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/return-ticket.css' %}">
+{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1>Bilet qaytar</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Marşrut</th>
+                <th scope="col">Tarix</th>
+                <th scope="col">Alınma tarixi</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for ticket in tickets %}
+            <tr>
+                <td>{{ ticket.id }}</td>
+                <td>{{ ticket.transport.description }}</td>
+                <td>{{ ticket.transport.departures_at|date:"d-m-Y" }}</td>
+                <td>{{ ticket.purchased_at|date:"d-m-Y H:i" }}</td>
+                <td><a href="#" class="btn btn-primary {% if not ticket.is_returnable %}disabled{% endif %}" data-bs-toggle="modal" data-bs-target="#m_{{ticket.id}}">Qaytar</a></td>
+            </tr>
+                <div class="modal fade" id="m_{{ticket.id}}" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Bilet №{{ ticket.id }}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <ul>
+                                        <li>Marşrut: {{ ticket.transport.description }}</li>
+                                        <li>Tarix: {{ ticket.transport.departures_at|date:"d-m-Y H-i" }}</li>
+                                        <li>Alınma tarixi: {{ticket.purchased_at}}</li>
+                                        <li>Avtobus № {{ticket.transport.id}}</li>
+                                        <li>Oturacaq: {{ticket.seat}}</li>
+                                    </ul>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İmtina</button>
+                                    <form action="{% url 'return_ticket' ticket.id %}?next=return_tickets" method="POST">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-primary">Qaytar</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        {% endfor %}
+        </tbody>
+    </table>
+{#    <div class="row">#}
+{#        <div class="col-md-6">#}
+{#            <div class="f-box d-flex flex-column align-content-lg-stretch">#}
+{#                <div class="mx-4 custom-card-header d-flex justify-content-between">#}
+{#                    <span>Marşrut</span>#}
+{#                    <span>Tarix</span>#}
+{#                    <span>Alınma tarixi</span>#}
+{#                </div>#}
+{#                {% for ticket in tickets %}#}
+{#                <div class="custom-card d-flex justify-content-between " data-bs-toggle="modal" data-bs-target="#m_{{ticket.id}}">#}
+{#                    <span>{{ ticket.transport.description }}</span>#}
+{#                    <span>{{ ticket.transport.departures_at|date:"d-m-Y" }}</span>#}
+{#                    <span>{{ ticket.purchased_at|date:"d-m-Y H:i" }}</span>#}
+{#                </div>#}
+
+{#                {% endfor %}#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+</div>
+{% endblock %}

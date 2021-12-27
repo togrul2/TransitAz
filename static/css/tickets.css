@@ -32,7 +32,8 @@
 
 
 .about-card{
-    border: 1px solid #000;
+    border: 1px solid #dadada;
+    border-top: none;
     padding: 10px;
-    background-color: #dadada;
+    background-color: #eeeeee;
 }

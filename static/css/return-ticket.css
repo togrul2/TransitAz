@@ -6,13 +6,3 @@
     border-radius: 3px;
     cursor: pointer;
 }
-
-.custom-card.not-usable{
-
-    border-color: #e82727;
-}
-
-.list-count{
-    position: sticky;
-    top: 20px;
-}

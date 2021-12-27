@@ -9,15 +9,34 @@
     <div class="container">
         <h1 class="mt-5 mb-2 text-lg-start text-center">Biletlərim</h1>
         <div>
-            <form action="{% url 'my-tickets' %}" method="GET">
-                <div class="col-2">
-                    <label class="form-label" for="filter">Filter:</label>
-                    <select class="form-control" name="filter" id="filter">
-                        <option {% if request.GET.filter == 'none' %}selected{% endif %} value="none">Filtersiz</option>
-                        <option {% if request.GET.filter == 'active' %}selected{% endif %} value="active">Aktiv olanlar</option>
-                        <option {% if request.GET.filter == 'bus_only' %}selected{% endif %} value="bus_only">Ancaq avtobus</option>
-                        <option {% if request.GET.filter == 'train_only' %}selected{% endif %} value="train_only">Ancaq qatar</option>
-                    </select>
+            <form action="{% url 'my_tickets' %}" method="GET">
+                <div class="row">
+                    <div class="col-2">
+                        <label class="form-label" for="filter">Filter:</label>
+                        <select class="form-control form-submit" name="filter" id="filter">
+                            <option {% if request.GET.filter == '' %}selected{% endif %} value="">Filtersiz</option>
+                            <option {% if request.GET.filter == 'active' %}selected{% endif %} value="active">Aktiv olanlar</option>
+                            <option {% if request.GET.filter == 'bus_only' %}selected{% endif %} value="bus_only">Ancaq avtobus</option>
+                            <option {% if request.GET.filter == 'train_only' %}selected{% endif %} value="train_only">Ancaq qatar</option>
+                        </select>
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label" for="sort">Sort:</label>
+                        <select class="form-control form-submit" name="sort" id="sort">
+                            <option {% if request.GET.sort == '' %}selected{% endif %} value="">Sortsuz</option>
+                            <option {% if request.GET.sort == 'sort_purchased_at_asc' %}selected{% endif %} value="sort_purchased_at_asc">Alınma tarixi(artma)</option>
+                            <option {% if request.GET.sort == 'sort_purchased_at_desc' %}selected{% endif %} value="sort_purchased_at_desc">Alınma tarixi(azalma)</option>
+
+                            <option {% if request.GET.sort == 'sort_date_asc' %}selected{% endif %} value="sort_date_asc">Tarix(artma)</option>
+                            <option {% if request.GET.sort == 'sort_date_desc' %}selected{% endif %} value="sort_date_desc">Tarix(azalma)</option>
+
+                            <option {% if request.GET.sort == 'sort_status_asc' %}selected{% endif %} value="sort_status_asc">Status(artma)</option>
+                            <option {% if request.GET.sort == 'sort_status_desc' %}selected{% endif %} value="sort_status_desc">Status(azalma)</option>
+                        </select>
+                    </div>
+                <div class="col-2 d-flex align-items-end">
+                    <a href="{% url 'return_tickets' %}" class="btn btn-outline-primary">Bilet qaytar</a>
+                </div>
                 </div>
             </form>
         </div>
@@ -69,7 +88,7 @@
                             <li class="page-item">
                             <a
                                 class="page-link"
-                                href="?page={{ tickets.previous_page_number }}&filter={{request.GET.filter}}"
+                                href="?page={{tickets.previous_page_number}}&filter={{request.GET.filter}}&sort={{request.GET.sort}}"
                                 aria-label="Previous"
                             ><span aria-hidden="true">&laquo;</span></a>
                         </li>
@@ -77,11 +96,15 @@
                         {% for page in tickets.paginator.page_range %}
                             {% if page == tickets.number %}
                             <li class="page-item active">
-                                <a class="page-link" href="?page={{page}}&filter={{request.GET.filter}}">{{page}}</a>
+                                <a class="page-link"
+                                   href="?page={{page}}&filter={{request.GET.filter}}&sort={{request.GET.sort}}"
+                                >{{page}}</a>
                             </li>
                             {% else %}
                             <li class="page-item">
-                                <a class="page-link" href="?page={{page}}&filter={{request.GET.filter}}">{{page}}</a>
+                                <a class="page-link"
+                                   href="?page={{page}}&filter={{request.GET.filter}}&sort={{request.GET.sort}}"
+                                >{{page}}</a>
                             </li>
                             {% endif %}
                         {% endfor %}
@@ -89,7 +112,7 @@
                         <li class="page-item">
                             <a
                                 class="page-link"
-                                href="?page={{tickets.next_page_number}}&filter={{request.GET.filter}}"
+                                href="?page={{tickets.next_page_number}}&filter={{request.GET.filter}}&sort={{request.GET.sort}}"
                                 aria-label="Next"
                             ><span aria-hidden="true">&raquo;</span></a>
                         </li>

@@ -5,7 +5,7 @@ tickets.forEach(ticket=> {
     });
 });
 
-const filter_select = document.querySelector("#filter");
-filter_select.addEventListener('change', ()=>{
+const [...selects] = document.querySelectorAll('.form-submit');
+selects.forEach(select=>select.addEventListener('change', ()=>{
     document.forms[0].submit();
-})
+}));

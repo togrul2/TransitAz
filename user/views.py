@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.password_validation import validate_password, ValidationError
@@ -81,7 +82,6 @@ def registerUser(request):
 
     if request.method == 'POST':
         has_error = False
-        context = {'data': request.POST}
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
         email = request.POST.get('email')
@@ -130,8 +130,7 @@ def registerUser(request):
 
 def logoutUser(request):
     path = request.GET.get('next', 'main')
-
-    if path == '':
+    if path in ('', 'my_profile', 'edit_profile', 'my_tickets'):
         path = 'main'
     logout(request)
     return redirect(path)
@@ -159,7 +158,7 @@ def activate_user(request, uidb64, token):
 def my_profile(request):
     user = request.user
     if not user.is_authenticated:
-        return redirect('dashboard')
+        return HttpResponse("You are not authorized to see this page", status=403)
 
     return render(request, 'my-profile.html', context={'path': 'my_profile'})
 
@@ -177,7 +176,7 @@ def add_phone(request):
 def change_password(request):
     user = request.user
     if not user.is_authenticated:
-        return redirect(request.GET.get('next', 'main'))
+        return HttpResponse("You are not authorized to see this page", status=403)
 
     if request.method == 'POST':
         old_password = request.POST.get('old_password')
@@ -209,6 +208,9 @@ def change_password(request):
 
 
 def edit_profile(request):
+    if not request.user.is_authenticated:
+        return HttpResponse("You are not authorized to see this page", status=403)
+
     user = User.objects.get(username=request.user)
     if request.method == "POST":
         username = request.POST.get('username')

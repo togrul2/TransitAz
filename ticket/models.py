@@ -1,4 +1,5 @@
 import datetime
+
 from django.utils import timezone
 from django.db import models
 from user.models import User
@@ -101,3 +102,7 @@ class Ticket(models.Model):
     @property
     def is_usable(self):
         return self.transport.departures_at > timezone.now()
+
+    @property
+    def is_returnable(self):
+        return self.transport.departures_at - datetime.timedelta(days=1) > timezone.now()

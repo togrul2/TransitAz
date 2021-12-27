@@ -40,12 +40,13 @@
         </div>
         <div class="col-md-6 profile-menu d-flex justify-content-center">
             <div class="d-flex flex-column justify-content-evenly">
-                <ul>
+                <ul class="list-unstyled">
                     <li><a href="{% url 'edit_profile' %}" class="btn btn-outline-primary">Hesab məlumatların dəyis</a></li>
                     <li><a href="{% url 'change_password' %}" class="btn btn-outline-primary">Sifrəni dəyiş</a></li>
+                    <li><a href="{% url 'my_tickets' %}" class="btn btn-outline-primary">Biletlərim</a></li>
+                    <li><a href="{% url 'return_tickets' %}" class="btn btn-outline-primary">Bilet qaytar</a></li>
                 </ul>
             </div>
-
         </div>
     </div>
 </div>

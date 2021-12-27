@@ -32,7 +32,7 @@
                     </div>
                     <div class="form-check">
                         <input {% if request.GET.oneortwoway == 'two' %}checked{% endif %} class="form-check-input" type="radio" value='two' name="oneortwoway" id="gedis-gayidis">
-                        <label class="form-check-label" for="gedis-gayidis">Gediç və gəliş</label>
+                        <label class="form-check-label" for="gedis-gayidis">Gediş və gəliş</label>
                     </div>
                 </div>
                 <div class="mt-3 form-wrapper form-bus">
@@ -172,12 +172,12 @@
                                         <span>Bos yer: {{ result.seats_remain }}</span>
                                     </div>
                                     <div>
-                                        <i class="fas fa-wheelchair {% if result.has_seats_for_disabled %}link-primary{% endif %}"></i>
-                                        <i class="fas fa-wifi {% if result.has_wifi %}link-primary{% endif %}"></i>
-                                        <i class="fas fa-plug {% if result.has_free_snacks %}link-primary{% endif %}"></i>
-                                        <i class="fas fa-utensils {% if result.has_wifi %}link-primary{% endif %}"></i>
-                                        <i class="fas fa-photo-video {% if result.has_multimedia %}link-primary{% endif %}"></i>
-                                        <i class="fas fa-wind {% if result.has_air_conditioning %}link-primary{% endif %}"></i>
+                                        <i class="fas fa-wheelchair {% if result.has_seats_for_disabled %}link-primary{% endif %}"  data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Invalidler ucun yerler"></i>
+                                        <i class="fas fa-wifi {% if result.has_wifi %}link-primary{% endif %}"  data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content=""></i>
+                                        <i class="fas fa-plug {% if result.has_free_snacks %}link-primary{% endif %}"  data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content=""></i>
+                                        <i class="fas fa-utensils {% if result.has_wifi %}link-primary{% endif %}"  data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content=""></i>
+                                        <i class="fas fa-photo-video {% if result.has_multimedia %}link-primary{% endif %}"  data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content=""></i>
+                                        <i class="fas fa-wind {% if result.has_air_conditioning %}link-primary{% endif %}"  data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content=""></i>
                                     </div>
 
                                     <div>

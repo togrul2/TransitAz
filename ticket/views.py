@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from .models import City, Transport, Ticket, Station
+import datetime
 from django.core.paginator import Paginator
 import json
 
@@ -27,6 +28,8 @@ def search_tickets(request):
     cities = City.objects.all()
     # bus_destinations = Station.objects.filter(type='Bus')
     # train_destinations = Station.objects.filter(type='Train')
+    if 'p_count' not in request.GET:
+        request.GET.p_count = 1
 
     bus_destinations = {city.name: city.stations.filter(type='Bus') for city in cities}
     train_destinations = {city.name: city.stations.filter(type='Train') for city in cities}
@@ -41,18 +44,15 @@ def search_tickets(request):
         start_date = request.GET.get('bus_start_date', '')
         arrive_date = request.GET.get('bus_arrive_date', '')
 
-        try:
-            results1 = Transport.objects.filter(type='Bus',
-                                                starting_point__description=start_point,
-                                                destination__description=arrive_point,
-                                                departures_at__contains=start_date)
-            if one_or_two_way == 'two':
-                results2 = Transport.objects.filter(type='Bus',
-                                                    starting_point__description=arrive_point,
-                                                    destination__description=start_point,
-                                                    departures_at__contains=arrive_date)
-        except:
-            pass
+        results1 = Transport.objects.filter(type='Bus',
+                                            starting_point__description=start_point,
+                                            destination__description=arrive_point,
+                                            departures_at__contains=start_date)
+        if one_or_two_way == 'two':
+            results2 = Transport.objects.filter(type='Bus',
+                                                starting_point__description=arrive_point,
+                                                destination__description=start_point,
+                                                departures_at__contains=arrive_date)
 
     elif option == 'train-search':
         start_point = request.GET.get('train_start_station', '')
@@ -60,23 +60,21 @@ def search_tickets(request):
         start_date = request.GET.get('train_start_date', '')
         arrive_date = request.GET.get('train_arrive_date', '')
 
-        try:
-            results1 = Transport.objects.filter(type='Train',
-                                                starting_point__description=start_point,
-                                                destination__description=arrive_point,
-                                                departures_at__contains=start_date)
-            if one_or_two_way == 'two':
-                results2 = Transport.objects.filter(type='Train',
-                                                    starting_point__description=arrive_point,
-                                                    destination__description=start_point,
-                                                    departures_at__contains=arrive_date)
-        except:
-            pass
+        results1 = Transport.objects.filter(type='Train',
+                                            starting_point__description=start_point,
+                                            destination__description=arrive_point,
+                                            departures_at__contains=start_date)
+        if one_or_two_way == 'two':
+            results2 = Transport.objects.filter(type='Train',
+                                                starting_point__description=arrive_point,
+                                                destination__description=start_point,
+                                                departures_at__contains=arrive_date)
 
         if results1:
             results1 = {i['departures_at']: results1.filter(departures_at=i['departures_at']) for i in
                         results1.values('departures_at')}.items()
-        if results2:
+
+        if one_or_two_way == 'two' and results2:
             results2 = {i['departures_at']: results2.filter(departures_at=i['departures_at']) for i in
                         results2.values('departures_at')}.items()
 
@@ -115,23 +113,36 @@ def myTickets(request):
         return redirect(request.GET.get('next', 'main'))
 
     filter_opt = request.GET.get('filter', '')
+    sort_opt = request.GET.get('sort', '')
+
     total = Ticket.objects.filter(owner=request.user).count()
     train_total = Ticket.objects.filter(owner=request.user, transport__type='Train').count()
     bus_total = Ticket.objects.filter(owner=request.user, transport__type='Bus').count()
-    usable_tickets = len(list(filter(lambda obj: obj.is_usable, list(Ticket.objects.filter(owner=request.user)))))
+    usable_tickets = len(list(
+        filter(lambda obj: obj.is_usable, list(Ticket.objects.filter(owner=request.user)))))
     usable_train_tickets = len(list(
         filter(lambda obj: obj.is_usable, list(Ticket.objects.filter(owner=request.user, transport__type='Train')))))
-    usable_bus_tickets = len(
-        list(filter(lambda obj: obj.is_usable, list(Ticket.objects.filter(owner=request.user, transport__type='Bus')))))
+    usable_bus_tickets = len(list(
+        filter(lambda obj: obj.is_usable, list(Ticket.objects.filter(owner=request.user, transport__type='Bus')))))
 
     if filter_opt == 'active':
-        tickets = list(filter(lambda obj: obj.is_usable, list(Ticket.objects.filter(owner=request.user))))
+        tickets_id = [ticket.id for ticket in Ticket.objects.filter(owner=request.user) if ticket.is_usable]
+        tickets = Ticket.objects.filter(id__in=tickets_id)
     elif filter_opt == 'bus_only':
         tickets = Ticket.objects.filter(owner=request.user, transport__type='Bus')
     elif filter_opt == 'train_only':
         tickets = Ticket.objects.filter(owner=request.user, transport__type='Train')
     else:
         tickets = Ticket.objects.filter(owner=request.user)
+
+    if sort_opt == 'sort_purchased_at_asc':
+        tickets = tickets.order_by('purchased_at')
+    elif sort_opt == 'sort_purchased_at_desc':
+        tickets = tickets.order_by('-purchased_at')
+    elif sort_opt == 'sort_date_asc':
+        tickets = tickets.order_by('transport__departures_at')
+    elif sort_opt == 'sort_date_desc':
+        tickets = tickets.order_by('-transport__departures_at')
 
     paginator = Paginator(tickets, 10)
 
@@ -140,7 +151,7 @@ def myTickets(request):
     except:
         result = paginator.get_page(1)
 
-    return render(request, 'my-tickets.html', context={'path': 'my-tickets',
+    return render(request, 'my-tickets.html', context={'path': 'my_tickets',
                                                        'tickets': result,
                                                        'total': total,
                                                        'train_total': train_total,
@@ -156,6 +167,19 @@ def map_search(request):
     return render(request, 'map.html', context={'path': 'map_search',
                                                 'train_stations': train_stations,
                                                 'bus_stations': bus_stations})
+
+
+def tickets_for_return(request):
+    user = request.user
+    tickets = Ticket.objects.filter(owner=user, transport__departures_at__gte=datetime.datetime.utcnow())
+    return render(request, 'return-ticket.html', context={'path': 'return_ticket',
+                                                          'tickets': tickets})
+
+
+def return_ticket(request, pk):
+    ticket = Ticket.objects.get(id=pk)
+    ticket.delete()
+    return redirect(request.GET.get('next', 'dashboard'))
 
 
 def about_us(request):

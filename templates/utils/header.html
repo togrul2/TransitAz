@@ -20,25 +20,30 @@
 				<li class="nav-item">
                     <a class="nav-link {% if path == 'tickets-cart' %}active{% endif %}"
                        href="{% url 'tickets-cart' %}">Bilet səbəti
-                        <span class="badge badge-count-tickets bg-secondary">0</span>
+                        <span class="badge rounded-pill badge-count-tickets bg-secondary">0</span>
                     </a>
                 </li>
 			</ul>
 			<ul class="navbar-nav mb-2 mb-lg-0">
 				{% if request.user.is_authenticated %}
 				<li class="nav-item dropdown me-2">
-					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
-						data-bs-toggle="dropdown" aria-expanded="false">
+					<a href="#"
+                       class="nav-link dropdown-toggle"
+                       id="profile-dropdown"
+                       role="button"
+                       data-bs-toggle="dropdown"
+                       aria-expanded="false"
+                    >
 						Xoş Gəldiniz
-						{% if request.user.first_name and request.user.last_name %}
-						{{ request.user.first_name }} {{ request.user.last_name }}
+						{% if request.user.first_name %}
+						{{ request.user.first_name }}
 						{% else %}
 						{{ request.user.username}}
 						{% endif%}
 					</a>
-					<ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-						<li><a class="dropdown-item {% if path == 'my-profile' %}active{% endif %}" href="{% url 'my_profile' %}"><i class="fas fa-user-alt"></i> Hesabım</a></li>
-						<li><a class="dropdown-item {% if path == 'my-tickets' %}active{% endif %}" href="{% url 'my-tickets' %}"><i class="fas fa-ticket-alt"></i> Biletlərim</a></li>
+					<ul class="dropdown-menu" aria-labelledby="profile-dropdown">
+						<li><a class="dropdown-item {% if path == 'my_profile' %}active{% endif %}" href="{% url 'my_profile' %}"><i class="fas fa-user-alt"></i> Hesabım</a></li>
+						<li><a class="dropdown-item {% if path == 'my_tickets' %}active{% endif %}" href="{% url 'my_tickets' %}"><i class="fas fa-ticket-alt"></i> Biletlərim</a></li>
 						<li>
 							<a class="dropdown-item logout-link" href="{% url 'logout' %}?next={{path}}">
 								<i class="fas fa-sign-out-alt"></i> Hesabdan cıx

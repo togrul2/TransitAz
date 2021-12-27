@@ -5,9 +5,6 @@
 
 {% block body %}
 <div class="container c-main">
-    <div class="text-start w-50 mb-2">
-        <a class="btn btn-primary" href="{% url 'my_profile' %}">Go Back</a>
-    </div>
     <div class="form-wrapper w-50">
         <h1>Hesab məlumatları</h1>
         <form method="post">
@@ -85,6 +82,7 @@
                 </div>
             </div>
             <div class="mt-2 text-md-end text-center">
+                <a class="btn btn-primary-secondary me-3" href="{% url 'my_profile' %}">Arxaya</a>
                 <button type="submit" class="btn btn-primary">Təstiqlə</button>
             </div>
         </form>
