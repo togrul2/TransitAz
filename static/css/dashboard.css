@@ -1,15 +1,29 @@
 .carousel-wrapper {
-    margin: 20px 0;
+    /*width: 100%;*/
 }
 
 .carousel.slide {
-    width: 1000px;
-    height: 400px;
+    width: 100%;
 }
 
 .carousel-wrapper img {
-    width: 1000px;
     height: 400px;
+}
+
+.carousel-caption-custom-1 {
+    font-size: 24px;
+    background-color: rgba(0,0,0, .255);
+    padding: 10px 30px;
+    clip-path: polygon(5% 11%, 89% 6%, 97% 95%, 3% 79%);
+
+
+}
+
+.carousel-caption-custom-2 {
+    font-size: 24px;
+    background-color: rgba(0,0,0, .255);
+    padding: 10px 30px;
+    clip-path: polygon(1% 19%, 97% 13%, 93% 74%, 6% 70%);
 }
 
 .choice-wrapper {
@@ -25,9 +39,9 @@
 }
 
 @media (min-width: 767px){
-    .carousel-wrapper {
-        margin: 20px 50px;
-    }
+    /*.carousel-wrapper {*/
+    /*    margin: 20px 50px;*/
+    /*}*/
     .choice-wrapper{
         margin: 40px 200px;
     }

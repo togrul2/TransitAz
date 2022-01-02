@@ -1,5 +1,4 @@
 import datetime
-
 from django.utils import timezone
 from django.db import models
 from user.models import User
@@ -28,8 +27,8 @@ class Station(models.Model):
     region = models.CharField(max_length=50)
     coords = models.CharField(max_length=1000, null=True, blank=True)
     city = models.ForeignKey(City, on_delete=models.CASCADE, null=True, blank=True, related_name='stations')
-    map_x = models.FloatField(null=True, blank=True)
-    map_y = models.FloatField(null=True, blank=True)
+    map_x = models.FloatField(default=0)
+    map_y = models.FloatField(default=0)
 
     def __str__(self):
         return f'{self.type}: {self.description}'

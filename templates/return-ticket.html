@@ -27,7 +27,7 @@
                 <td>{{ ticket.transport.description }}</td>
                 <td>{{ ticket.transport.departures_at|date:"d-m-Y" }}</td>
                 <td>{{ ticket.purchased_at|date:"d-m-Y H:i" }}</td>
-                <td><a href="#" class="btn btn-primary {% if not ticket.is_returnable %}disabled{% endif %}" data-bs-toggle="modal" data-bs-target="#m_{{ticket.id}}">Qaytar</a></td>
+                <td><a href="#" class="btn btn-outline-danger {% if not ticket.is_returnable %}disabled{% endif %}" data-bs-toggle="modal" data-bs-target="#m_{{ticket.id}}">Qaytar</a></td>
             </tr>
                 <div class="modal fade" id="m_{{ticket.id}}" tabindex="-1" aria-hidden="true">
                         <div class="modal-dialog">
@@ -41,15 +41,15 @@
                                         <li>Marşrut: {{ ticket.transport.description }}</li>
                                         <li>Tarix: {{ ticket.transport.departures_at|date:"d-m-Y H-i" }}</li>
                                         <li>Alınma tarixi: {{ticket.purchased_at}}</li>
-                                        <li>Avtobus № {{ticket.transport.id}}</li>
-                                        <li>Oturacaq: {{ticket.seat}}</li>
+                                        <li>Avtobus №{{ticket.transport.id}}</li>
+                                        <li>Oturacaq: №{{ticket.seat}}</li>
                                     </ul>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İmtina</button>
                                     <form action="{% url 'return_ticket' ticket.id %}?next=return_tickets" method="POST">
                                         {% csrf_token %}
-                                        <button type="submit" class="btn btn-primary">Qaytar</button>
+                                        <button type="submit" class="btn btn-outline-danger">Qaytar</button>
                                     </form>
                                 </div>
                             </div>

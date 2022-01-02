@@ -10,23 +10,22 @@
                 <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
                     <input type="radio" class="btn-check radio-choice" name="radio_choice" id="radio-bus"
                         value="bus-search" autocomplete="off" checked>
-                    <label class="btn btn-outline-primary" for="radio-bus">Avtobus</label>
+                    <label class="btn btn-outline-primary" for="radio-bus"><i class="fas fa-bus"></i> Avtobus</label>
 
                     <input type="radio" class="btn-check radio-choice" name="radio_choice" id="radio-train"
                         value="train-search" autocomplete="off">
-                    <label class="btn btn-outline-primary" for="radio-train">Qatar</label>
+                    <label class="btn btn-outline-primary" for="radio-train">Qatar <i class="fas fa-train"></i></label>
                 </div>
                 <div class="my-4">
                     <div class="form-check">
                         <input class="form-check-input" type="radio" value='one' name="oneortwoway" id="gedis-tek" checked>
-                        <label class="form-check-label" for="gedis-tek">Gedis ancaq</label>
+                        <label class="form-check-label" for="gedis-tek">Gediş ancaq</label>
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" type="radio" value='two' name="oneortwoway" id="gedis-gayidis">
-                        <label class="form-check-label" for="gedis-gayidis">Gedis ve gayidis</label>
+                        <label class="form-check-label" for="gedis-gayidis">Gedis və qayıdış</label>
                     </div>
                 </div>
-
                 <div class="form-div form-bus">
                     <h3>Avtobus</h3>
                     <label class="form-label" for="bus_starting">Burdan:</label>
@@ -55,12 +54,6 @@
                     {% endfor %}
                     </datalist>
                 </div>
-{#                <label class="form-label" for="starting">Burdan:</label>#}
-{#                <input class="form-control" name="starting_station" type="text" id="starting">#}
-
-{#                <label class="form-label" for="starting">Buraya:</label>#}
-{#                <input class="form-control" type="text" id="starting">#}
-
                 <input class="btn btn-primary mt-2" type="submit" value="Axtar">
             </form>
             <button class=" hide-form" id="hide-form-btn"><i class="fas fa-arrow-up"></i></button>
@@ -83,80 +76,167 @@
     const map = L.map('map').setView([40.5,47.8], 7);
     const link = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
     let departure_selected = false;
+    let arrive_selected = false;
     L.tileLayer(link, { maxZoom:19 }).addTo(map);
 
     bus_stations = [];
     train_stations = [];
 
-    // Train icon
-    const icon_train = L.icon({
-        iconUrl: '{% static 'media/images/icon-train.png' %}',
-        iconSize: [20, 20],
-        iconAnchor: [10, 10],
-    });
-
-    // Bus icon
-    const icon_bus = L.icon({
-        // iconUrl: 'https://www.clipartmax.com/png/small/218-2181404_red-bus-icon-image-embankment-tube-station.png',
-        iconUrl: '{% static 'media/images/icon-bus.png' %}',
-        iconSize: [20, 20],
-        iconAnchor: [10, 10],
-    });
     const bus_start_input = document.querySelector('#bus_starting');
     bus_start_input.addEventListener('change', ()=>{
-        if(bus_start_input.value === '')
-            departure_selected=false
+        if(bus_start_input.value === ''){
+            bus_stations.forEach(s=>{
+                if (s.options.departure_selected) {
+                    s.options.departure_selected = false;
+                    s.options.icon.options.iconSize=[20,20];
+                    s.options.icon.options.iconAnchor=[10,10];
+                }
+            });
+            departure_selected=false;
+            displayBusStations();
+        }
     });
+
     const bus_arrive_input = document.querySelector('#bus_arriving');
+    bus_arrive_input.addEventListener('change', ()=>{
+        if(bus_arrive_input.value === ''){
+            bus_stations.forEach(s=>{
+                if(s.options.arrive_selected) {
+                    s.options.arrive_selected = false;
+                    s.options.icon.options.iconSize = [20, 20];
+                    s.options.icon.options.iconAnchor = [10, 10];
+                }
+            });
+            displayBusStations();
+        }
+    });
+
+
     const train_start_input = document.querySelector('#train_starting');
     train_start_input.addEventListener('change', ()=>{
-        if(train_start_input.value === '')
+        if(train_start_input.value === ''){
+            train_stations.forEach(s=>{
+                if(s.options.departure_selected) {
+                    s.options.departure_selected = false;
+                    s.options.icon.options.iconSize = [20, 20];
+                    s.options.icon.options.iconAnchor = [10, 10];
+                }
+            });
             departure_selected=false
+            displayTrainStations();
+        }
     });
+
     const train_arrive_input = document.querySelector('#train_arriving');
+    train_arrive_input.addEventListener('change', ()=>{
+        if(train_arrive_input.value === ''){
+            train_stations.forEach(s=>{
+                if(s.options.arrive_selected) {
+                    s.options.arrive_selected = false;
+                    s.options.icon.options.iconSize = [20, 20];
+                    s.options.icon.options.iconAnchor = [10, 10];
+                }
+            });
+            displayTrainStations();
+        }
+    });
 
     {% for station in bus_stations %}
-        {% if station.map_x and station.map_y %}
-        bus_stations.push(L.marker([{{station.map_x}}, {{station.map_y}}], {
-            icon: icon_bus,
-            title:"{{station.description}}",
-            id:"{{station.id}}",
-            type:"{{station.type}}",
-        }).addEventListener('click', e=>{
-            if(!departure_selected){
-                bus_start_input.value = e.target.options.title;
-                departure_selected = true;
-            } else {
-                bus_arrive_input.value = e.target.options.title;
-            }
-        }));
-        {% endif %}
+        bus_stations.push(
+            L.marker([{{station.map_x}}, {{station.map_y}}], {
+                icon: L.icon({
+                    iconUrl: '{% static 'media/images/icon-bus.png' %}',
+                    iconSize: [20, 20],
+                    iconAnchor: [10, 10],
+                }),
+                title:"{{station.description}}",
+                id:{{station.id}},
+                type:"{{station.type}}",
+                departure_selected: false,
+                arrive_selected: false,
+                resize: function() {
+                    if(this.departure_selected || this.arrive_selected) {
+                        this.icon.iconSize = [30, 30];
+                        this.icon.iconAnchor = [15, 15];
+                    } else {
+                        this.icon.iconSize = [20, 20];
+                        this.icon.iconAnchor = [10, 10];
+                    }
+                }
+            }).addEventListener('click', function(e) {
+                if(!departure_selected){
+                    bus_start_input.value = e.target.options.title;
+                    bus_stations.forEach(s=>{s.options.departure_selected=false});
+                    e.target.options.departure_selected = true;
+                    departure_selected = true;
+                } else {
+                    bus_arrive_input.value = e.target.options.title;
+                    bus_stations.forEach(s=>s.options.arrive_selected=false);
+                    e.target.options.arrive_selected = true;
+                }
+
+                if(e.target.options.arrive_selected || e.target.options.departure_selected){
+                    e.target.options.icon.options.iconSize = [30, 30];
+                    e.target.options.icon.options.iconAnchor = [15, 15];
+                }
+                bus_stations.forEach(s=>{
+                    if(!s.options.arrive_selected && !s.options.departure_selected) {
+                        s.options.arrive_selected = false;
+                        s.options.icon.options.iconSize = [20, 20];
+                        s.options.icon.options.iconAnchor = [10, 10];
+                    }
+                });
+
+                displayBusStations();
+            }));
     {% endfor %}
+
     // Getting train stations markers
     {% for station in train_stations %}
-        {% if station.map_x and station.map_y %}
         train_stations.push(L.marker([{{station.map_x}}, {{station.map_y}}], {
-            icon: icon_train,
-            title:"{{station.description}}",
-            id:"{{station.id}}",
-            type:"{{station.type}}",
+            icon: L.icon({
+                iconUrl: "{% static 'media/images/icon-train.png' %}",
+                iconSize: [20, 20],
+                iconAnchor: [10, 10],
+            }),
+            title:'{{station.description}}',
+            id:{{station.id}},
+            type:'{{station.type}}',
+            departure_selected: false,
+            arrive_selected: false,
         }).addEventListener('click', e=>{
             if(!departure_selected){
                 train_start_input.value = e.target.options.title;
+                train_stations.forEach(s=>s.options.departure_selected=false)
+                e.target.options.departure_selected=true;
                 departure_selected = true;
-            } else
+            } else {
                 train_arrive_input.value = e.target.options.title;
+                train_stations.forEach(s=>s.options.arrive_selected=false)
+                e.target.options.arrive_selected=true;
+            }
+            if(e.target.options.arrive_selected || e.target.options.departure_selected) {
+                e.target.options.icon.options.iconSize = [30, 30];
+                e.target.options.icon.options.iconAnchor = [15, 15];
+            }
+            train_stations.forEach(s=> {
+                if(!s.options.arrive_selected && !s.options.departure_selected) {
+                    s.options.arrive_selected = false
+                    s.options.icon.options.iconSize = [20, 20];
+                    s.options.icon.options.iconAnchor = [10, 10];
+                }
+            });
+            displayTrainStations();
         }));
-        {% endif %}
     {% endfor %}
 
     function displayBusStations() {
-        bus_stations.forEach(station=>{station.addTo(map)});
+        bus_stations.forEach(station=>{station.remove(); station.addTo(map)});
         train_stations.forEach(station=>{station.remove()});
     }
 
     function displayTrainStations() {
-        train_stations.forEach(station=>{station.addTo(map)});
+        train_stations.forEach(station=>{station.remove(); station.addTo(map)});
         bus_stations.forEach(station=>{station.remove()});
     }
 
@@ -168,16 +248,14 @@
     radio_choice.forEach(form_btn =>{
         form_btn.addEventListener('change',() => {
             departure_selected = false;
-            if(form_btn.checked && form_btn.value === 'train-search'){
+            if(form_btn.checked && form_btn.value === 'train-search')
                 displayTrainStations();
-            } else if (form_btn.checked && form_btn.value === 'bus-search') {
+            else if (form_btn.checked && form_btn.value === 'bus-search')
                 displayBusStations();
-            }
             form_divs[0].classList.toggle('hidden');
             form_divs[1].classList.toggle('hidden');
         });
     });
-
 </script>
 
 {% endblock %}

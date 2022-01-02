@@ -10,7 +10,6 @@
 
 .profile-container {
     width: 500px;
-    padding: 20px 30px;
     border: 1px solid #777779;
     border-radius: 10px;
     box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
@@ -24,3 +23,22 @@
     margin: 25px 0;
 }
 
+.info-section {
+    padding: 20px 30px;
+}
+
+.custom-list-group {
+    display: flex;
+    justify-content: space-between;
+}
+
+.custom-list-group-item {
+    border-top: 1px solid rgba(0, 0, 0, 0.5);
+    color: #000;
+    text-decoration: none;
+    padding: 20px 30px;
+}
+
+.custom-list-group-item:not(:last-of-type) {
+    border-right: 1px solid rgba(0, 0, 0, 0.5);
+}

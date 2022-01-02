@@ -5,12 +5,11 @@ import datetime
 from django.core.paginator import Paginator
 import json
 
-
 # Create your views here.
 
+
 def main(request):
-    # transports = Transport.objects.all()
-    return render(request, 'main.html')
+    return redirect('dashboard')
 
 
 def dashboard(request):
@@ -26,8 +25,6 @@ def dashboard(request):
 
 def search_tickets(request):
     cities = City.objects.all()
-    # bus_destinations = Station.objects.filter(type='Bus')
-    # train_destinations = Station.objects.filter(type='Train')
     if 'p_count' not in request.GET:
         request.GET.p_count = 1
 
@@ -53,6 +50,14 @@ def search_tickets(request):
                                                 starting_point__description=arrive_point,
                                                 destination__description=start_point,
                                                 departures_at__contains=arrive_date)
+
+        if results1:
+            results1 = {i['departures_at']: results1.filter(departures_at=i['departures_at']) for i in
+                        results1.values('departures_at')}.items()
+
+        if one_or_two_way == 'two' and results2:
+            results2 = {i['departures_at']: results2.filter(departures_at=i['departures_at']) for i in
+                        results2.values('departures_at')}.items()
 
     elif option == 'train-search':
         start_point = request.GET.get('train_start_station', '')
@@ -92,19 +97,24 @@ def tickets_cart(request):
 
 def proceedPayment(request):
     data = json.loads(request.body)
+    log = ''
     if request.user.is_authenticated:
         for item in data:
             for seat in item['seats_selected']:
                 transport = Transport.objects.get(id=item['id'])
-                if Ticket.objects.filter(transport=transport, seat=seat).exists():
-                    pass
-                else:
+                try:
+                    ticket = Ticket.objects.get(transport=transport, seat=seat)
+                    log += f'[Error]: Ticket with id{ticket.id} for transport with id {ticket.transport.id} already was purchased.\n'
+                except:
                     ticket = Ticket(owner=request.user, transport=transport, is_purchased=True, seat=seat,
                                     type=item['type'])
                     ticket.save()
+
+        if log == '':
+            log = 'Purchase successful'
     else:
         return JsonResponse("Sign in for making purchase", safe=False, status=403)
-    return JsonResponse("Purchase successful", safe=False, status=200)
+    return JsonResponse(log, safe=False, status=200)
 
 
 def myTickets(request):
@@ -126,8 +136,7 @@ def myTickets(request):
         filter(lambda obj: obj.is_usable, list(Ticket.objects.filter(owner=request.user, transport__type='Bus')))))
 
     if filter_opt == 'active':
-        tickets_id = [ticket.id for ticket in Ticket.objects.filter(owner=request.user) if ticket.is_usable]
-        tickets = Ticket.objects.filter(id__in=tickets_id)
+        tickets = Ticket.objects.filter(id__in=(ticket.id for ticket in Ticket.objects.filter(owner=request.user) if ticket.is_usable))
     elif filter_opt == 'bus_only':
         tickets = Ticket.objects.filter(owner=request.user, transport__type='Bus')
     elif filter_opt == 'train_only':
@@ -171,9 +180,11 @@ def map_search(request):
 
 def tickets_for_return(request):
     user = request.user
+    if not user.is_authenticated:
+        return redirect(request.GET.get('next', 'dashboard'))
+
     tickets = Ticket.objects.filter(owner=user, transport__departures_at__gte=datetime.datetime.utcnow())
-    return render(request, 'return-ticket.html', context={'path': 'return_ticket',
-                                                          'tickets': tickets})
+    return render(request, 'return-ticket.html', context={'path': 'return_ticket', 'tickets': tickets})
 
 
 def return_ticket(request, pk):
