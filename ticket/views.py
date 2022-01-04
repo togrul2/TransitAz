@@ -1,9 +1,13 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
-from .models import City, Transport, Ticket, Station
-import datetime
 from django.core.paginator import Paginator
+from django.contrib import messages
+
+import datetime
 import json
+
+from .models import City, Transport, Ticket, Station
+
 
 # Create your views here.
 
@@ -120,6 +124,7 @@ def proceedPayment(request):
 def myTickets(request):
     user = request.user
     if not user.is_authenticated:
+        messages.error("")
         return redirect(request.GET.get('next', 'main'))
 
     filter_opt = request.GET.get('filter', '')

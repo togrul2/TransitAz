@@ -172,7 +172,7 @@
                                 </div>
                                 <div>
                                     <button
-                                        data-type="usual"
+                                        data-type="Adi"
                                         data-count="{% if request.GET.radio_choice == 'bus-search' %}{{request.GET.bus_p_count}}{% else %}{{request.GET.p_count}}{% endif %}"
                                         data-id="{{result.id}}"
                                         data-name="{{result.description}}"
@@ -185,7 +185,7 @@
                                         class="add-btn"
                                     >Adi: {{ result.price|floatformat:2 }} AZN</button>
                                     <button
-                                        data-type="lowcost"
+                                        data-type="Ekonom"
                                         data-count="{% if request.GET.radio_choice == 'bus-search' %}{{request.GET.bus_p_count}}{% else %}{{request.GET.p_count}}{% endif %}"
                                         data-id="{{result.id}}"
                                         data-name="{{result.description}}"
@@ -198,7 +198,7 @@
                                         class="add-btn"
                                     >Ekonom: {{ result.low_cost_price|floatformat:2 }} AZN</button>
                                     <button
-                                        data-type="business"
+                                        data-type="Biznes"
                                         data-count="{% if request.GET.radio_choice == 'bus-search' %}{{request.GET.bus_p_count}}{% else %}{{request.GET.p_count}}{% endif %}"
                                         data-id="{{result.id}}"
                                         data-name="{{result.description}}"
@@ -255,7 +255,7 @@
                                     </div>
                                     <div>
                                         <button
-                                            data-type="usual"
+                                            data-type="Adi"
                                             data-count="{% if request.GET.radio_choice == 'bus-search' %}{{request.GET.bus_p_count}}{% else %}{{request.GET.p_count}}{% endif %}"
                                             data-id="{{result.id}}"
                                             data-name="{{result.description}}"
@@ -268,7 +268,7 @@
                                             class="add-btn my-2"
                                         >Adi: {{ result.price|floatformat:2 }} AZN</button>
                                         <button
-                                            data-type="lowcost"
+                                            data-type="Ekonom"
                                             data-count="{% if request.GET.radio_choice == 'bus-search' %}{{request.GET.bus_p_count}}{% else %}{{request.GET.p_count}}{% endif %}"
                                             data-id="{{result.id}}"
                                             data-name="{{result.description}}"
@@ -281,7 +281,7 @@
                                             class="add-btn my-2"
                                         >Ekonom: {{ result.low_cost_price|floatformat:2 }} AZN</button>
                                         <button
-                                            data-type="business"
+                                            data-type="Biznes"
                                             data-count="{% if request.GET.radio_choice == 'bus-search' %}{{request.GET.bus_p_count}}{% else %}{{request.GET.p_count}}{% endif %}"
                                             data-id="{{result.id}}"
                                             data-name="{{result.description}}"

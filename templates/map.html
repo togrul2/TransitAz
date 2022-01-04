@@ -1,7 +1,17 @@
 {% extends 'main.html' %}
 {% load static %}
-{% block title %}Xerite axtarisi{% endblock %}
-{% block head %}<link rel="stylesheet" href="{% static 'css/map.css' %}">{% endblock %}
+{% block title %}Xəritə{% endblock %}
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/map.css' %}">
+    <!--Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+        crossorigin=""/>
+    <!-- Leaflet --><!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin=""></script>
+{% endblock %}
 
 {% block body %}
     <div class="wrapper h-100 d-flex">
@@ -36,7 +46,7 @@
 
                     <datalist id="bus_station_list">
                     {% for bus_station in bus_stations %}
-                        <option value="{{bus_station.name}}">
+                        <option value="{{bus_station.description}}">
                     {% endfor %}
                     </datalist>
                 </div>
@@ -50,7 +60,7 @@
 
                     <datalist id="train_station_list">
                     {% for train_station in train_stations %}
-                        <option value="{{train_station.name}}">
+                        <option value="{{train_station.description}}">
                     {% endfor %}
                     </datalist>
                 </div>
@@ -60,7 +70,6 @@
         </div>
         <div id="map"></div>
     </div>
-
 <script>
     // Show and hide form
     const hide_btn = document.querySelector('#hide-form-btn');
@@ -110,7 +119,6 @@
             displayBusStations();
         }
     });
-
 
     const train_start_input = document.querySelector('#train_starting');
     train_start_input.addEventListener('change', ()=>{
@@ -199,9 +207,9 @@
                 iconSize: [20, 20],
                 iconAnchor: [10, 10],
             }),
-            title:'{{station.description}}',
-            id:{{station.id}},
-            type:'{{station.type}}',
+            title: '{{station.description}}',
+            id: {{station.id}},
+            type: '{{station.type}}',
             departure_selected: false,
             arrive_selected: false,
         }).addEventListener('click', e=>{
