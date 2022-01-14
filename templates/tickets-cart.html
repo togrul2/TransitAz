@@ -1,14 +1,10 @@
 {% extends 'main.html' %}
 {% load static %}
 
-{% block title %}Biletler{% endblock %}
+{% block title %}Biletlər{% endblock %}
 
 {% block head %}
-<style>
-    .hidden {
-        display: none;
-    }
-</style>
+
 {% endblock %}
 
 {% block body %}
@@ -49,8 +45,27 @@
             </div>
         </div>
     </div>
+    <div class="my-5 position-relative">
+        <button class="btn btn-info" data-bs-toggle="collapse" data-bs-target="#bus_image">Avtobus yerləri</button>
+        <button class="btn btn-info mx-5" data-bs-toggle="collapse" data-bs-target="#train_image" data-bs-placement="right">Qatar yerləri</button>
+        <!-- Bus image -->
+        <div class="collapse position-absolute" id="bus_image" style="z-index: 10">
+            <div class="card">
+                <div class="card-body">
+                    <img src="{% static 'media/images/bus-59-plan.png' %}" alt="">
+                </div>
+            </div>
+        </div>
+        <!-- Train image -->
+        <div class="collapse position-absolute" id="train_image" style="z-index: 10; top: -400px; left:400px;">
+            <div class="card">
+                <div class="card-body">
+                    <img src="{% static 'media/images/train-plan.png' %}" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="{% static 'js/ticket-cart.js' %}"></script>
-
 {% endblock %}

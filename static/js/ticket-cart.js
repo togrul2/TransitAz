@@ -101,7 +101,7 @@ deleteButtons.forEach((btn) => {
 function hidePurchaseButton(){
     if(data == null || data.length === 0) {
         const pay_group_item = document.querySelector('.pay-group-item');
-        pay_group_item.classList.add('hidden');
+        pay_group_item.classList.add('collapse');
     }
 }
 

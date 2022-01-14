@@ -44,11 +44,13 @@
                         <select id="bus-start" name="bus_start_station" class="form-select">
                             <option {% if not request.GET.bus_start_station %}selected{% endif %} disabled></option>
                             {% for city, stations in bus_destinations.items %}
-                            <optgroup label="{{city}}">
+                                {% if stations %}
+                                <optgroup label="{{city}}">
                                 {% for station in stations %}
                                 <option {% if request.GET.bus_start_station == station.description %}selected{% endif %} value="{{station.description}}">{{station.description}}</option>
                                 {% endfor %}
-                            </optgroup>
+                                </optgroup>
+                                {% endif %}
                             {% endfor %}
                         </select>
                     </div>
@@ -58,11 +60,13 @@
                             aria-label="Default select example">
                             <option {% if not request.GET.bus_arrive_station %}selected{% endif %} disabled></option>
                             {% for city, stations in bus_destinations.items %}
-                            <optgroup label="{{city}}">
+                                {% if stations %}
+                                <optgroup label="{{city}}">
                                 {% for station in stations %}
                                 <option {% if request.GET.bus_arrive_station == station.description %}selected{% endif %} value="{{station.description}}">{{station.description}}</option>
                                 {% endfor %}
-                            </optgroup>
+                                </optgroup>
+                                {% endif %}
                             {% endfor %}
                         </select>
                     </div>
@@ -93,11 +97,13 @@
                         <select id="train-start" name="train_start_station" class="form-select">
                             <option {% if not request.GET.train_start_station %}selected{% endif %} disabled></option>
                             {% for city, stations in train_destinations.items %}
-                            <optgroup label="{{city}}">
-                                {% for station in stations %}
-                                <option {% if request.GET.train_start_station == station.description %}selected{% endif %} value="{{station.description}}">{{station.description}}</option>
-                                {% endfor %}
-                            </optgroup>
+                                {% if stations %}
+                                <optgroup label="{{city}}">
+                                    {% for station in stations %}
+                                    <option {% if request.GET.train_start_station == station.description %}selected{% endif %} value="{{station.description}}">{{station.description}}</option>
+                                    {% endfor %}
+                                </optgroup>
+                                {% endif %}
                             {% endfor %}
                         </select>
                     </div>
@@ -106,11 +112,13 @@
                         <select id="train-arrive" name="train_arrive_station" class="form-select">
                             <option {% if not request.GET.train_arrive_station %}selected{% endif %} disabled></option>
                             {% for city, stations in train_destinations.items %}
-                            <optgroup label="{{city}}">
+                                {% if stations %}
+                                <optgroup label="{{city}}">
                                 {% for station in stations %}
                                     <option {% if request.GET.train_arrive_station == station.description %}selected{% endif %} value="{{station.description}}">{{station.description}}</option>
                                 {% endfor %}
-                            </optgroup>
+                                </optgroup>
+                                {% endif %}
                             {% endfor %}
                         </select>
                     </div>
@@ -154,7 +162,7 @@
                                     {{ result.departures_at|date:"H:i"}} - {{ result.arrives_at|date:"H:i" }}
                                 </span>
                                 <span><i class="fas fa-user"></i> {{ result.seats_remain }}</span>
-                                <button data-id="about_{{result.id}}" class="more-info-btn">{{ result.price|floatformat:2 }} AZN</button>
+                                <button id="card-{{result.id}}" data-id="about_{{result.id}}" class="more-info-btn">{{ result.price|floatformat:2 }} AZN</button>
                             </div>
                             <div id="about_{{result.id}}" class="hidden about-card">
                                 <div class="info-part">
@@ -162,7 +170,7 @@
                                     <span>Finish: {{ result.destination.description }} - {{ result.arrives_at|date:"d/m/Y H:i" }}</span>
                                     <span>Bos yer: {{ result.seats_remain }}</span>
                                 </div>
-                                <div>
+                                <div class="mt-2">
                                     <i class="fas fa-wheelchair {% if result.has_seats_for_disabled %}link-primary{% endif %}" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Invalidler ucun yerler"></i>
                                     <i class="fas fa-wifi {% if result.has_wifi %} link-primary {% endif %}" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content=""></i>
                                     <i class="fas fa-plug {% if result.has_free_snacks %}link-primary{% endif %}" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content=""></i>
@@ -170,8 +178,9 @@
                                     <i class="fas fa-photo-video {% if result.has_multimedia %}link-primary{% endif %}" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content=""></i>
                                     <i class="fas fa-wind {% if result.has_air_conditioning %}link-primary{% endif %}" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content=""></i>
                                 </div>
-                                <div>
+                                <div class="d-flex flex-column w-50 gap-2 mt-2">
                                     <button
+                                        data-btn_target="card-{{result.id}}"
                                         data-type="Adi"
                                         data-count="{% if request.GET.radio_choice == 'bus-search' %}{{request.GET.bus_p_count}}{% else %}{{request.GET.p_count}}{% endif %}"
                                         data-id="{{result.id}}"
@@ -185,6 +194,7 @@
                                         class="add-btn"
                                     >Adi: {{ result.price|floatformat:2 }} AZN</button>
                                     <button
+                                        data-btn_target="card-{{result.id}}"
                                         data-type="Ekonom"
                                         data-count="{% if request.GET.radio_choice == 'bus-search' %}{{request.GET.bus_p_count}}{% else %}{{request.GET.p_count}}{% endif %}"
                                         data-id="{{result.id}}"
@@ -198,6 +208,7 @@
                                         class="add-btn"
                                     >Ekonom: {{ result.low_cost_price|floatformat:2 }} AZN</button>
                                     <button
+                                        data-btn_target="card-{{result.id}}"
                                         data-type="Biznes"
                                         data-count="{% if request.GET.radio_choice == 'bus-search' %}{{request.GET.bus_p_count}}{% else %}{{request.GET.p_count}}{% endif %}"
                                         data-id="{{result.id}}"
@@ -237,7 +248,7 @@
                                         {{ result.departures_at|date:"H:i"}} - {{ result.arrives_at|date:"H:i" }}
                                     </span>
                                     <span><i class="fas fa-user"></i> {{ result.seats_remain }}</span>
-                                    <button data-id="about_{{result.id}}" class="more-info-btn">{{ result.price|floatformat:2 }} AZN</button>
+                                    <button id="card-{{result.id}}" data-id="about_{{result.id}}" class="more-info-btn">{{ result.price|floatformat:2 }} AZN</button>
                                 </div>
                                 <div id="about_{{result.id}}" class="hidden about-card">
                                     <div class="info-part">
@@ -245,7 +256,7 @@
                                         <span>Finish: {{ result.destination.description }} - {{ result.arrives_at|date:"d/m/Y H:i" }}</span>
                                         <span>Bos yer: {{ result.seats_remain }}</span>
                                     </div>
-                                    <div>
+                                    <div class="mt-2">
                                         <i class="fas fa-wheelchair {% if result.has_seats_for_disabled %}link-primary{% endif %}"></i>
                                         <i class="fas fa-wifi {% if result.has_wifi %}link-primary{% endif %}"></i>
                                         <i class="fas fa-plug {% if result.has_free_snacks %}link-primary{% endif %}"></i>
@@ -253,8 +264,10 @@
                                         <i class="fas fa-photo-video {% if result.has_multimedia %}link-primary{% endif %}"></i>
                                         <i class="fas fa-wind {% if result.has_air_conditioning %}link-primary{% endif %}"></i>
                                     </div>
-                                    <div>
+                                    <div class="d-flex flex-column w-50 gap-2 mt-2">
                                         <button
+                                            class="add-btn"
+                                            data-btn_target="card-{{result.id}}"
                                             data-type="Adi"
                                             data-count="{% if request.GET.radio_choice == 'bus-search' %}{{request.GET.bus_p_count}}{% else %}{{request.GET.p_count}}{% endif %}"
                                             data-id="{{result.id}}"
@@ -265,9 +278,9 @@
                                             data-transport="{{result.type}}"
                                             data-seats="{{result.available_tickets}}"
                                             data-total_seats="{{result.capacity}}"
-                                            class="add-btn my-2"
                                         >Adi: {{ result.price|floatformat:2 }} AZN</button>
                                         <button
+                                            data-btn_target="card-{{result.id}}"
                                             data-type="Ekonom"
                                             data-count="{% if request.GET.radio_choice == 'bus-search' %}{{request.GET.bus_p_count}}{% else %}{{request.GET.p_count}}{% endif %}"
                                             data-id="{{result.id}}"
@@ -278,9 +291,10 @@
                                             data-transport="{{result.type}}"
                                             data-seats="{{result.available_tickets}}"
                                             data-total_seats="{{result.capacity}}"
-                                            class="add-btn my-2"
+                                            class="add-btn"
                                         >Ekonom: {{ result.low_cost_price|floatformat:2 }} AZN</button>
                                         <button
+                                            data-btn_target="card-{{result.id}}"
                                             data-type="Biznes"
                                             data-count="{% if request.GET.radio_choice == 'bus-search' %}{{request.GET.bus_p_count}}{% else %}{{request.GET.p_count}}{% endif %}"
                                             data-id="{{result.id}}"
@@ -291,7 +305,7 @@
                                             data-transport="{{result.type}}"
                                             data-seats="{{result.available_tickets}}"
                                             data-total_seats="{{result.capacity}}"
-                                            class="add-btn my-2"
+                                            class="add-btn "
                                         >Biznes: {{ result.business_price|floatformat:2 }} AZN</button>
                                     </div>
                                 </div>
@@ -310,7 +324,7 @@
 
 <script src="{% static 'js/dashboard.js' %}"></script>
 <script>
-    const expand_buttons = document.querySelectorAll(".more-info-btn");
+    const expand_buttons = document.querySelectorAll('.more-info-btn');
     expand_buttons.forEach(btn=>btn.addEventListener('click',
         ()=>document.getElementById(`${btn.dataset.id}`).classList.toggle('hidden')
     ));

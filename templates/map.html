@@ -91,64 +91,6 @@
     bus_stations = [];
     train_stations = [];
 
-    const bus_start_input = document.querySelector('#bus_starting');
-    bus_start_input.addEventListener('change', ()=>{
-        if(bus_start_input.value === ''){
-            bus_stations.forEach(s=>{
-                if (s.options.departure_selected) {
-                    s.options.departure_selected = false;
-                    s.options.icon.options.iconSize=[20,20];
-                    s.options.icon.options.iconAnchor=[10,10];
-                }
-            });
-            departure_selected=false;
-            displayBusStations();
-        }
-    });
-
-    const bus_arrive_input = document.querySelector('#bus_arriving');
-    bus_arrive_input.addEventListener('change', ()=>{
-        if(bus_arrive_input.value === ''){
-            bus_stations.forEach(s=>{
-                if(s.options.arrive_selected) {
-                    s.options.arrive_selected = false;
-                    s.options.icon.options.iconSize = [20, 20];
-                    s.options.icon.options.iconAnchor = [10, 10];
-                }
-            });
-            displayBusStations();
-        }
-    });
-
-    const train_start_input = document.querySelector('#train_starting');
-    train_start_input.addEventListener('change', ()=>{
-        if(train_start_input.value === ''){
-            train_stations.forEach(s=>{
-                if(s.options.departure_selected) {
-                    s.options.departure_selected = false;
-                    s.options.icon.options.iconSize = [20, 20];
-                    s.options.icon.options.iconAnchor = [10, 10];
-                }
-            });
-            departure_selected=false
-            displayTrainStations();
-        }
-    });
-
-    const train_arrive_input = document.querySelector('#train_arriving');
-    train_arrive_input.addEventListener('change', ()=>{
-        if(train_arrive_input.value === ''){
-            train_stations.forEach(s=>{
-                if(s.options.arrive_selected) {
-                    s.options.arrive_selected = false;
-                    s.options.icon.options.iconSize = [20, 20];
-                    s.options.icon.options.iconAnchor = [10, 10];
-                }
-            });
-            displayTrainStations();
-        }
-    });
-
     {% for station in bus_stations %}
         bus_stations.push(
             L.marker([{{station.map_x}}, {{station.map_y}}], {
@@ -198,6 +140,94 @@
                 displayBusStations();
             }));
     {% endfor %}
+
+    const bus_stations_desc = [
+        {% for station in bus_stations %}
+            "{{station.description}}",
+        {% endfor %}
+    ];
+    const train_stations_desc = [
+        {% for station in train_stations %}
+            "{{station.description}}",
+        {% endfor %}
+    ];
+    const bus_start_input = document.querySelector('#bus_starting');
+    bus_start_input.addEventListener('change', ()=>{
+        if(bus_start_input.value === ''){
+            bus_stations.forEach(s=>{
+                if (s.options.departure_selected) {
+                    s.options.departure_selected = false;
+                    s.options.icon.options.iconSize=[20,20];
+                    s.options.icon.options.iconAnchor=[10,10];
+                }
+            });
+            departure_selected=false;
+        } else if(bus_stations_desc.includes(bus_start_input.value)) {
+            const station_to_choose = bus_stations.find(value=>value.options.title===bus_start_input.value);
+            station_to_choose.options.icon.options.iconSize = [30, 30];
+            station_to_choose.options.icon.options.iconAnchor = [15, 15];
+            station_to_choose.options.departure_selected = true;
+        }
+        displayBusStations();
+    });
+
+    const bus_arrive_input = document.querySelector('#bus_arriving');
+    bus_arrive_input.addEventListener('change', ()=>{
+        if(bus_arrive_input.value === ''){
+            bus_stations.forEach(s=>{
+                if(s.options.arrive_selected) {
+                    s.options.arrive_selected = false;
+                    s.options.icon.options.iconSize = [20, 20];
+                    s.options.icon.options.iconAnchor = [10, 10];
+                }
+            });
+        } else if(bus_stations_desc.includes(bus_arrive_input.value)) {
+            const station_to_choose = bus_stations.find(value=>value.options.title===bus_arrive_input.value);
+            station_to_choose.options.icon.options.iconSize = [30, 30];
+            station_to_choose.options.icon.options.iconAnchor = [15, 15];
+            station_to_choose.options.arrive_selected = true;
+        }
+        displayBusStations();
+    });
+
+    const train_start_input = document.querySelector('#train_starting');
+    train_start_input.addEventListener('change', ()=>{
+        if(train_start_input.value === ''){
+            train_stations.forEach(s=>{
+                if(s.options.departure_selected) {
+                    s.options.departure_selected = false;
+                    s.options.icon.options.iconSize = [20, 20];
+                    s.options.icon.options.iconAnchor = [10, 10];
+                }
+            });
+            departure_selected=false;
+        } else if(train_stations_desc.includes(train_start_input.value)) {
+            const station_to_choose = train_stations.find(value=>value.options.title===train_start_input.value);
+            station_to_choose.options.icon.options.iconSize = [30, 30];
+            station_to_choose.options.icon.options.iconAnchor = [15, 15];
+            station_to_choose.options.departure_selected = true;
+        }
+        displayTrainStations();
+    });
+
+    const train_arrive_input = document.querySelector('#train_arriving');
+    train_arrive_input.addEventListener('change', ()=>{
+        if(train_arrive_input.value === ''){
+            train_stations.forEach(s=>{
+                if(s.options.arrive_selected) {
+                    s.options.arrive_selected = false;
+                    s.options.icon.options.iconSize = [20, 20];
+                    s.options.icon.options.iconAnchor = [10, 10];
+                }
+            });
+        } else if(train_stations_desc.includes(train_arrive_input.value)) {
+            const station_to_choose = train_stations.find(value=>value.options.title===train_arrive_input.value);
+            station_to_choose.options.icon.options.iconSize = [30, 30];
+            station_to_choose.options.icon.options.iconAnchor = [15, 15];
+            station_to_choose.options.arrive_selected = true;
+        }
+        displayTrainStations();
+    });
 
     // Getting train stations markers
     {% for station in train_stations %}

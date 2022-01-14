@@ -41,8 +41,11 @@ info_buttons.forEach(info_btn=>{
 // Add action
 const add_buttons = document.querySelectorAll('.add-btn');
 add_buttons.forEach(btn => {
+    let data = JSON.parse(localStorage.getItem("tickets"));
+    if(data && data.find(value => value.id === btn.dataset.id && value.type === btn.dataset.type))
+        btn.classList.add('added');
+
     btn.addEventListener('click', ()=>{
-        let data = JSON.parse(localStorage.getItem("tickets"));
         const item = {
             id:btn.dataset.id,
             name:btn.dataset.name,
@@ -55,8 +58,12 @@ add_buttons.forEach(btn => {
             seats:btn.dataset.seats,
             total_seats:btn.dataset.total_seats,
         };
+        const parent_btn = document.getElementById(btn.dataset.btn_target);
+        parent_btn.classList.add('added');
+        btn.classList.add('added');
+        // console.log(parent_btn);
 
-        item.seats_selected = JSON.parse(item.seats).slice(0, item.count)
+        item.seats_selected = JSON.parse(item.seats).slice(0, item.count);
 
         if(data == null)
             data = [item];
