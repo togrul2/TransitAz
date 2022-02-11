@@ -44,6 +44,7 @@ add_buttons.forEach(btn => {
     let data = JSON.parse(localStorage.getItem("tickets"));
     if(data && data.find(value => value.id === btn.dataset.id && value.type === btn.dataset.type))
         btn.classList.add('added');
+    let parent_btn = document.getElementById(btn.dataset.btn_target);
 
     btn.addEventListener('click', ()=>{
         const item = {
@@ -58,9 +59,11 @@ add_buttons.forEach(btn => {
             seats:btn.dataset.seats,
             total_seats:btn.dataset.total_seats,
         };
-        const parent_btn = document.getElementById(btn.dataset.btn_target);
+
         parent_btn.classList.add('added');
+        parent_btn.innerHTML = '<i class="fas fa-check"></i>';
         btn.classList.add('added');
+
         // console.log(parent_btn);
 
         item.seats_selected = JSON.parse(item.seats).slice(0, item.count);
@@ -73,4 +76,6 @@ add_buttons.forEach(btn => {
         localStorage.setItem('tickets', JSON.stringify(data));
         updateCountBadge();
     });
+    if (parent_btn.classList.contains('added'))
+        parent_btn.innerHTML = '<i class="fas fa-check"></i>';
 });

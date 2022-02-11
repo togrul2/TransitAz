@@ -18,24 +18,24 @@
         </div>
         <div class="carousel-inner">
             <div class="carousel-item active" data-bs-interval="3000">
-                <img src="{% static 'media/images/carousel-img-1.jpg' %}" class="d-block w-100" alt="...">
+                <img src="{% static 'media/images/slider05.jpg' %}" class="d-block w-100" alt="...">
                 <div class="carousel-caption d-none d-md-block" style="z-index: 2">
-                    <span class="carousel-caption-custom">Yeni il fürsətləri</span>
-                    <p><a class="btn btn-outline-primary" href="{% url 'map_search' %}">Ətraflı</a></p>
+                    <span class="carousel-caption-custom" style="color: #fff !important">Yeni il fürsətləri</span>
+                    <p><a class="btn btn-primary" href="{% url 'map_search' %}">Ətraflı</a></p>
                 </div>
             </div>
             <div class="carousel-item" data-bs-interval="3000">
                 <img src="{% static 'media/images/carousel-img-2.png' %}" class="d-block w-100" alt="...">
                 <div class="carousel-caption d-none d-md-block" style="z-index: 2">
-                    <span class="carousel-caption-custom">İnteraktiv Xəritə</span>
-                    <p><a class="btn btn-outline-primary" href="{% url 'map_search' %}">Kec</a></p>
+                    <span class="carousel-caption-custom" style="color: #fff !important">İnteraktiv Xəritə</span>
+                    <p><a class="btn btn-primary" href="{% url 'map_search' %}">Kec</a></p>
                 </div>
             </div>
             <div class="carousel-item" data-bs-interval="3000">
                 <img src="{% static 'media/images/carousel04.jpg' %}" class="d-block w-100" alt="...">
                 <div class="carousel-caption d-none d-md-block" style="z-index: 2">
-                    <span class="carousel-caption-custom">Saytımıza xoş gəlmisiz</span>
-                    <p><a class="btn btn-outline-primary" href="{% url 'about_us' %}">Tədbiq barədə</a></p>
+                    <span class="carousel-caption-custom" style="color: #fff !important">Saytımıza xoş gəlmisiz</span>
+                    <p><a class="btn btn-primary" href="{% url 'about_us' %}">Tədbiq barədə</a></p>
                 </div>
             </div>
         </div>
@@ -285,12 +285,13 @@
 </section>
 
 <section class="map-card" style="margin: 50px 50px;">
+<h1 class="text-center">Xəritədə Axtar</h1>
     <div class="blog-card">
         <div class="meta">
             <div class="photo" style="background-image: url({% static 'media/images/map-img.jpg' %})"></div>
         </div>
         <div class="description">
-            <h1>Xəritədə Axtar</h1>
+            <h1></h1>
             <p>Xəritə üzərində istədiniz stansiyanı seçərək uyğun biletlər axtarın</p>
             <p class="read-more"><a href="{% url 'map_search' %}">Axtar</a></p>
         </div>
