@@ -1,25 +1,28 @@
 version: "3.9"
+
 services:
-  app:
-    build: .
+  db:
+    image: mysql
+    env_file:
+      - .env
     volumes:
-      - .:/transitaz
+      - transitaz_db:/var/lib/mysql
     ports:
-      - 8000:8000
-    image: app:transitaz
-    container_name: django_container
-    command:
-      - python manage.py runserver 0.0.0.0.8000
+      - "3307:3306"
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - .:/transitaz/
     depends_on:
       - db
-  db:
-    image: mysql:8.0.26
-    environment:
-      MYSQL_DATABASE: 'transitaz'
-      MYSQL_ALLOWED_EMPTY_PASSWORD: 'true'
-    volumes:
-      - ./data/mysql/db:/var/lib/mysql
-
-
-
-
+    ports:
+      - "8000:8000"
+    expose:
+      - 8000
+    command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+volumes:
+  transitaz_db:
