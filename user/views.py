@@ -77,6 +77,7 @@ def loginUser(request):
 
 
 def registerUser(request):
+    status_code = 200
     if request.user.is_authenticated:
         return redirect('main')
 
@@ -94,6 +95,8 @@ def registerUser(request):
             validate_password(password1)
         except ValidationError as VeMessage:
             messages.error(request, *VeMessage)
+            status_code = 400
+            has_error = True
 
         if password1 != password2:
             messages.error(request, 'Şifrələr eyni deyillər')
@@ -104,17 +107,20 @@ def registerUser(request):
             has_error = True
 
         if User.objects.filter(username=username).exists():
-            messages.error(request, 'İstifadəçi adı artıq islənir, başqasını seçin')
-            return render(request, 'auth/register.html', context={'data': request.POST})
+            messages.error(request, 'İstifadəçi adı artıq işlənir, başqasını seçin')
+            status_code = 400
+            return render(request, 'auth/register.html', context={'data': request.POST}, status=status_code)
 
         if User.objects.filter(email=email).exists():
             messages.error(request, 'Email adresi artıq işlənir, başqasını seçin')
-            return render(request, 'auth/register.html', context={'data': request.POST})
+            status_code = 400
+            return render(request, 'auth/register.html', context={'data': request.POST}, status=status_code)
 
         if agreed != 'on':
             messages.error(request, 'Qaydaları qəbul etməlisiniz')
         if has_error:
-            return render(request, 'auth/register.html', context={'data': request.POST})
+            status_code = 400
+            return render(request, 'auth/register.html', context={'data': request.POST}, status=status_code)
 
         user = User.objects.create_user(first_name=first_name, last_name=last_name, username=username, email=email)
         user.set_password(password1)
@@ -125,7 +131,7 @@ def registerUser(request):
             messages.success(request, 'Təsdiq məktubu e-poçtunuza göndərildi')
             return redirect('activation_request')
 
-    return render(request, template_name='auth/register.html')
+    return render(request, template_name='auth/register.html', status=status_code)
 
 
 def logoutUser(request):

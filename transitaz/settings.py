@@ -20,7 +20,6 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
@@ -31,7 +30,6 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
 
 # Application definition
 
@@ -78,29 +76,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'transitaz.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        # For Docker
-        # 'NAME': os.getenv('MYSQL_DATABASE'),
-
-        # For local
-        'NAME': 'transitaz',
-
+        # 'NAME': os.getenv('MYSQL_DATABASE'),  # For Docker
+        'NAME': 'transitaz',  # For local
         'USER': os.getenv('DB_USER'),
-
         'PASSWORD': os.getenv('MYSQL_ROOT_PASSWORD'),
-
-        # for local
-        'HOST': '127.0.0.1',
-
-        # for Docker
-        # 'HOST': 'db',
-
+        'HOST': '127.0.0.1',  # for local
+        # 'HOST': 'db',  # for Docker
         'PORT': os.environ.get('DB_PORT', '3306'),
     }
 }
@@ -123,7 +110,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 AUTH_USER_MODEL = 'user.User'
@@ -137,7 +123,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
