@@ -23,9 +23,9 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     # Auth views
-    path('login/', user_views.loginUser, name='login'),
-    path('register/', user_views.registerUser, name='register'),
-    path('logout/', user_views.logoutUser, name='logout'),
+    path('login', user_views.loginUser, name='login'),
+    path('register', user_views.registerUser, name='register'),
+    path('logout', user_views.logoutUser, name='logout'),
     path('', ticket_views.main, name='main'),
     path('activate-user/<str:uidb64>/<str:token>', user_views.activate_user, name='activate'),
     path('activation-request', user_views.activation_request, name='activation_request'),

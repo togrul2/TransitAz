@@ -1,7 +1,6 @@
 from django.test import TestCase
 from django.test import Client
 from django.urls import reverse
-
 from user.models import User
 
 
@@ -96,3 +95,34 @@ class TestRegister(TestCase):
             'password2': 'password'
         })
         self.assertEquals(response.status_code, 400)
+
+
+class TestLogin(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(username='johndoe')
+        self.user.set_password('Password123')
+
+    def test_with_invalid_credentials(self):
+        response = self.client.post(reverse('login'), {
+            'username': 'johndoe',
+            'password': 'password134'
+        })
+        self.assertEquals(response.status_code, 400)
+
+    def test_with_unverified(self):
+        response = self.client.post(reverse('login'), {
+            'username': 'johndoe',
+            'password': 'Password123'
+        })
+        self.assertEquals(response.status_code, 400)
+
+    def test_success(self):
+        self.user.is_verified = True
+        self.user.save()
+        response = self.client.post(reverse('login'), {
+            'username': 'johndoe',
+            'password': 'Password123'
+        })
+        self.assertEquals(response.status_code, 302)
+        

@@ -67,6 +67,10 @@ class Transport(models.Model):
         return [seat for seat in range(1, self.capacity + 1) if not self.tickets.filter(seat=seat).exists()]
 
     @property
+    def price_with_discount(self):
+        return self.price * self.discount
+
+    @property
     def seats_remain(self):
         return self.capacity - self.tickets.all().count()
 
@@ -92,8 +96,9 @@ class Ticket(models.Model):
     purchased_at = models.DateTimeField(auto_now_add=True)
     # food_option = models.BooleanField(default=False)
 
+    @DeprecationWarning
     def was_purchased(self):
-        return self.objects.filter(bus=self.transport, seat=self.seat).exists()
+        return self.objects.filter(transport=self.transport, seat=self.seat).exists()
 
     def __str__(self):
         return f'{self.type}: {self.owner} - {self.transport}'

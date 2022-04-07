@@ -48,6 +48,7 @@ def send_activation_email(request, user):
 
 
 def loginUser(request):
+    status_code = 200
     if request.user.is_authenticated:
         return redirect('main')
 
@@ -61,7 +62,8 @@ def loginUser(request):
         if user is not None:
             if not user.is_verified:
                 messages.error(request, "Sizin hesabınız təsdiqlənməyib, email poçtunuzu yoxlayın!")
-
+                status_code = 400
+                return render(request, 'auth/login.html', status=status_code)
             login(request, user)
             if remember_me == 'remember_me':
                 request.session.set_expiry(0)
@@ -72,8 +74,9 @@ def loginUser(request):
             return redirect(path)
         else:
             messages.error(request, "İstifadəçi adı və ya şifrə yanlışdır!")
+            status_code = 400
 
-    return render(request, 'auth/login.html')
+    return render(request, 'auth/login.html', status=status_code)
 
 
 def registerUser(request):

@@ -4,13 +4,9 @@
 {% block head %}
     <link rel="stylesheet" href="{% static 'css/map.css' %}">
     <!--Leaflet -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
-        crossorigin=""/>
+    <link rel="stylesheet" href="{% static 'leaflet/leaflet.css' %}">
     <!-- Leaflet --><!-- Make sure you put this AFTER Leaflet's CSS -->
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
-        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
-        crossorigin=""></script>
+    <script src="{% static 'leaflet/leaflet.js' %}"></script>
 {% endblock %}
 
 {% block body %}
@@ -90,10 +86,12 @@
 
     bus_stations = [];
     train_stations = [];
-
+    let x, y;
     {% for station in bus_stations %}
+        x = {{ station.map_x }};
+        y = {{ station.map_y }};
         bus_stations.push(
-            L.marker([{{station.map_x}}, {{station.map_y}}], {
+            L.marker([x, y], {
                 icon: L.icon({
                     iconUrl: '{% static 'media/images/icon-bus.png' %}',
                     iconSize: [20, 20],
@@ -231,7 +229,9 @@
 
     // Getting train stations markers
     {% for station in train_stations %}
-        train_stations.push(L.marker([{{station.map_x}}, {{station.map_y}}], {
+        x = {{ station.map_x }};
+        y = {{ station.map_y }};
+        train_stations.push(L.marker([x, y], {
             icon: L.icon({
                 iconUrl: "{% static 'media/images/icon-train.png' %}",
                 iconSize: [20, 20],

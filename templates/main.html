@@ -33,16 +33,17 @@
         const csrftoken = getCookie('csrftoken');
 
         function updateCountBadge() {
-            let count = 0;
+            // let count = 0;
             const items = JSON.parse(localStorage.getItem('tickets'));
             let badge = document.querySelector('.badge-count-tickets');
             if (items === null) {
                 badge.textContent = '0';
                 return 0;
             }
-            items.forEach(element => {
-                count++;
-            });
+            // items.forEach(() => {
+            //    count++;
+            // });
+            const count = items.length;
             badge.textContent = count.toString();
         }
 
